@@ -1,7 +1,6 @@
-import CardFormPage from "./pages/CardFormPage";
+// App.tsx
+import LandingPage from "./pages/LandingPage";
 
-function App() {
-  return <CardFormPage />;
+export default function App() {
+  return <LandingPage />;
 }
-
-export default App;
