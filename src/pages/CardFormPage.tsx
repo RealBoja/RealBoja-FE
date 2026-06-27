@@ -2,7 +2,7 @@ import { useState } from "react";
 import MobileLayout from "../components/layout/MobileLayout";
 import TopBar from "../components/common/TopBar";
 import { ChipGroup } from "../components/common/ChipGroup";
-import { TextInput } from "../components/common/TextInput";
+import TextInput from "../components/common/TextInput";
 import Button from "../components/common/Button";
 
 const ROOM_TYPES = [
@@ -56,8 +56,10 @@ export default function CardFormPage() {
           placeholder="예: 8"
           value={memberCount}
           onChange={setMemberCount}
-          helperText="참여율과 약속 온도를 계산할 때 사용돼요."
         />
+        <p className="text-xs text-muted pt-1.5">
+          참여율과 약속 온도를 계산할 때 사용돼요.
+        </p>
       </div>
 
       <ChipGroup

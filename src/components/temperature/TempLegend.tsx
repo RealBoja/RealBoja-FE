@@ -1,6 +1,6 @@
 const LEGEND_ITEMS = [
   { color: "bg-blue-400", label: "0~30℃ 냉동방" },
-  { color: "bg-emerald-400", label: "31~50℃ 생존 확인" },
+  { color: "bg-emerald-400", label: "31~50℃ 해동중" },
   { color: "bg-amber-400", label: "51~70℃ 온기 도는 중" },
   { color: "bg-orange", label: "71~100℃ 진짜 볼 각" },
 ];
