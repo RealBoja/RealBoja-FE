@@ -55,7 +55,7 @@ export default function CardFormPage() {
 
       await createCard(roomCode);
 
-      navigate(`/card/${roomCode}`);
+      navigate(`/${roomCode}/card-result`);
     } catch (e) {
       console.error(e);
       alert("카드 생성에 실패했어요. 다시 시도해주세요.");
