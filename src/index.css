@@ -8,6 +8,12 @@
   --color-cardWeak: #FFF7EA;
   --color-card: #FFFFFF;
 
+  /* Brand - Primary Orange */
+  --color-orange: #E9782F;        /* C.orange - Primary */
+  --color-orange-dark: #D85F1F;   /* C.orangeDark - hover/pressed */
+  --color-orange-light: #FFF1E3;  /* C.orangeLight */
+  --color-kakao: #FEE500;         /* C.kakao - 카카오 노랑 */
+
   /* Text */
   --color-text: #24150E;          /* Text Main */
   --color-muted: #7B6658;         /* Text Muted */
