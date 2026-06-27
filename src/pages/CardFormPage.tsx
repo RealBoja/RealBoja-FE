@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MobileLayout from "../components/layout/MobileLayout";
 import TopBar from "../components/common/TopBar";
 import { ChipGroup } from "../components/common/ChipGroup";
 import TextInput from "../components/common/TextInput";
 import Button from "../components/common/Button";
+import { createRoom, createCard } from "../api/roomApi";
 
 const ROOM_TYPES = [
   "고등학교 친구방",
@@ -20,16 +22,60 @@ const PURPOSES = ["밥", "카페", "술", "그냥 얼굴 보기"];
 const CARD_TONES = ["담백하게", "웃기게", "킹받게", "감성적으로"];
 
 export default function CardFormPage() {
+  const navigate = useNavigate();
+
   const [roomType, setRoomType] = useState<string>();
   const [lastMet, setLastMet] = useState<string>();
   const [memberCount, setMemberCount] = useState("");
   const [purpose, setPurpose] = useState<string>();
   const [cardTone, setCardTone] = useState<string>();
+  const [loading, setLoading] = useState(false);
+
+  const isFormValid =
+    roomType && lastMet && memberCount.trim() !== "" && purpose && cardTone;
+
+  const handleSubmit = async () => {
+    if (!isFormValid || !roomType || !lastMet || !purpose || !cardTone) {
+      alert("모든 항목을 입력해주세요.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const room = await createRoom({
+        roomType,
+        lastMet,
+        memberCount,
+        purpose,
+        cardTone,
+      });
+
+      const roomCode = room.data.roomCode as string;
+
+      await createCard(roomCode);
+
+      navigate(`/card/${roomCode}`);
+    } catch (e) {
+      console.error(e);
+      alert("카드 생성에 실패했어요. 다시 시도해주세요.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <MobileLayout
       topBar={<TopBar />}
-      bottomCTA={<Button variant="primary">AI 약속 카드 만들기 ✨</Button>}
+      bottomCTA={
+        <Button
+          variant="primary"
+          onClick={handleSubmit}
+          disabled={!isFormValid || loading}
+        >
+          {loading ? "만드는 중..." : "AI 약속 카드 만들기 ✨"}
+        </Button>
+      }
     >
       <p className="text-xl font-bold text-text">어떤 방을 깨울까요?</p>
       <p className="text-sm text-muted pt-1">
