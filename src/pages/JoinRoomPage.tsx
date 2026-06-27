@@ -8,10 +8,10 @@ import JoinHintBox from "@/components/join/JoinHintBox";
 import {
   getRoomDetail,
   getCard,
-  getAnalysis,
   ROOM_TYPE_LABEL,
   PURPOSE_LABEL_MAP,
 } from "@/api/roomApi";
+import { getAnalysis } from "@/api/analysisApi";
 
 export default function JoinRoomPage() {
   const { roomCode } = useParams<{ roomCode: string }>();
@@ -50,11 +50,8 @@ export default function JoinRoomPage() {
           setCardBody(cardRes.data.body);
           setCardCtaText(cardRes.data.ctaText);
         }
-
-        if (analysisRes.success) {
-          setTemperature(analysisRes.data.temperature);
-          setParticipantCount(analysisRes.data.participantCount);
-        }
+        setTemperature(analysisRes.temperature);
+        setParticipantCount(analysisRes.participantCount);
       } catch (err) {
         console.error("데이터 로딩 실패:", err);
       } finally {

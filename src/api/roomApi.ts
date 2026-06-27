@@ -129,23 +129,6 @@ export interface RoomDetailResponse {
   message: string;
 }
 
-interface AnalysisResponse {
-  success: boolean;
-  data: {
-    temperature: number;
-    statusType: string;
-    statusLabel: string;
-    participantCount: number;
-    roomSize: number;
-    participationRate: number;
-    reactionSummary: Record<string, number>;
-    reactionParticipants: Record<string, string[]>;
-    summary: string;
-    nextAction: string;
-  };
-  message: string;
-}
-
 // ── API 함수 ──────────────────────────────────────
 
 export async function createRoom(params: {
@@ -187,13 +170,6 @@ export async function getRoomDetail(roomCode: string) {
 export async function getCard(roomCode: string) {
   const { data } = await axios.get<CreateCardResponse>(
     `${BASE_URL}/api/rooms/${roomCode}/card`,
-  );
-  return data;
-}
-
-export async function getAnalysis(roomCode: string) {
-  const { data } = await axios.get<AnalysisResponse>(
-    `${BASE_URL}/api/rooms/${roomCode}/analysis`,
   );
   return data;
 }
