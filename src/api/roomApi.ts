@@ -56,7 +56,6 @@ export const REACTION_ID_TO_TYPE: Record<string, string> = {
   eyes: "JUST_ALIVE",
 };
 
-// Frame10 시간대 한글 ↔ enum 매핑
 export const TIME_SLOT_MAP: Record<string, string> = {
   "평일 점심": "WEEKDAY_LUNCH",
   "평일 저녁": "WEEKDAY_DINNER",
@@ -178,9 +177,7 @@ export async function createCard(roomCode: string) {
 }
 
 export async function getRoomDetail(roomCode: string) {
-  const { data } = await api.get<RoomDetailResponse>(
-    `/api/rooms/${roomCode}`,
-  );
+  const { data } = await api.get<RoomDetailResponse>(`/api/rooms/${roomCode}`);
   return data;
 }
 
