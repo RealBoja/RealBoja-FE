@@ -10,7 +10,7 @@ interface Reaction {
 const REACTIONS: Reaction[] = [
     { id: "fire", emoji: "🔥", label: "나 진짜 볼래" },
     { id: "rice", emoji: "🍚", label: "밥이면 감" },
-    { id: "grab", emoji: "🤏", label: "누가 잡으면 감" },
+    { id: "grab", emoji: "🙋", label: "누가 잡으면 감" },
     { id: "eyes", emoji: "👀", label: "일단 생존신고" },
 ];
 
