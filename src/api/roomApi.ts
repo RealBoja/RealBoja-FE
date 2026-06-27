@@ -36,7 +36,8 @@ const PURPOSE_MAP: Record<string, string> = {
   "그냥 얼굴 보기": "JUST_SEE",
 };
 
-export const PURPOSE_LABEL: Record<string, string> = {
+// enum 값 -> 한글 라벨 역매핑 (반응 화면에서 "OO이면 감" 만들 때 사용)
+export const PURPOSE_LABEL_MAP: Record<string, string> = {
   MEAL: "밥",
   CAFE: "카페",
   DRINK: "술",
@@ -77,7 +78,33 @@ interface CreateCardResponse {
   message: string;
 }
 
-interface RoomResponse {
+interface CreateParticipantRequest {
+  nickname: string;
+}
+
+interface CreateParticipantResponse {
+  success: boolean;
+  data: {
+    participantId: number;
+    roomCode: string;
+    nickname: string;
+    currentStep: "WARMING" | "SCHEDULING";
+  };
+  message: string | null;
+}
+
+interface CreateReactionRequest {
+  participantId: number;
+  reactionType: string;
+}
+
+interface CreateReactionResponse {
+  success: boolean;
+  data: unknown;
+  message: string | null;
+}
+
+export interface RoomDetailResponse {
   success: boolean;
   data: {
     roomId: number;
@@ -142,6 +169,12 @@ export async function createCard(roomCode: string) {
 export async function getRoom(roomCode: string) {
   const { data } = await axios.get<RoomResponse>(
     `${BASE_URL}/api/rooms/${roomCode}`,
+export async function createParticipant(roomCode: string, nickname: string) {
+  const payload: CreateParticipantRequest = { nickname };
+
+  const { data } = await axios.post<CreateParticipantResponse>(
+    `${BASE_URL}/api/rooms/${roomCode}/participants`,
+    payload,
   );
   return data;
 }
@@ -149,6 +182,16 @@ export async function getRoom(roomCode: string) {
 export async function getCard(roomCode: string) {
   const { data } = await axios.get<CreateCardResponse>(
     `${BASE_URL}/api/rooms/${roomCode}/card`,
+export async function createReaction(
+  roomCode: string,
+  participantId: number,
+  reactionType: string, // ReactionGrid에서 이미 enum 값으로 넘어옴
+) {
+  const payload: CreateReactionRequest = { participantId, reactionType };
+
+  const { data } = await axios.post<CreateReactionResponse>(
+    `${BASE_URL}/api/rooms/${roomCode}/reactions`,
+    payload,
   );
   return data;
 }
@@ -159,3 +202,16 @@ export async function getAnalysis(roomCode: string) {
   );
   return data;
 }
+export async function getRoomDetail(roomCode: string) {
+  const { data } = await axios.get<RoomDetailResponse>(
+    `${BASE_URL}/api/rooms/${roomCode}`,
+  );
+  return data;
+}
+
+export const REACTION_ID_TO_TYPE: Record<string, string> = {
+  fire: "REALLY_MEET",
+  rice: "PURPOSE_OK",
+  grab: "IF_SOMEONE_LEADS",
+  eyes: "JUST_ALIVE",
+};
