@@ -1,5 +1,6 @@
 import MobileLayout from "../components/layout/MobileLayout";
 import Button from "../components/common/Button";
+import { useNavigate } from "react-router-dom";
 
 const steps = [
   {
@@ -28,13 +29,14 @@ const steps = [
   },
 ];
 
-const ArrowIcon = () => (
+const ArrowIcon = ({ className }: { className?: string }) => (
   <svg
     width="14"
     height="14"
     viewBox="0 0 14 14"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    className={className}
   >
     <path
       d="M2.91675 7H11.0834"
@@ -54,8 +56,9 @@ const ArrowIcon = () => (
 );
 
 export default function LandingPage() {
+  const navigate = useNavigate();
   const handleStart = () => {
-    // TODO: navigate("/room/select")
+    navigate("/create");
   };
 
   return (
@@ -90,7 +93,6 @@ export default function LandingPage() {
             <br />
             방이 있나요?
           </p>
-          {/* 데코 이모지 */}
           <span className="absolute right-[38px] top-1 text-base opacity-60">
             🔥
           </span>
@@ -126,7 +128,7 @@ export default function LandingPage() {
           <div key={step.num} className={i !== 0 ? "pt-3" : ""}>
             <button
               onClick={handleStart}
-              className="flex items-center w-full gap-4 p-4 rounded-2xl bg-white border-[0.8px] border-[#eedccb] text-left"
+              className="group flex items-center w-full gap-4 p-4 rounded-2xl bg-white border-[0.8px] border-[#eedccb] text-left cursor-pointer hover:border-[#f0be83] transition-all duration-200"
               style={{ boxShadow: "0px 2px 10px 0 rgba(233,120,47,0.08)" }}
             >
               {/* 아이콘 */}
@@ -149,8 +151,8 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* 화살표 */}
-              <ArrowIcon />
+              {/* 화살표 - hover 시 오른쪽으로 바운스 */}
+              <ArrowIcon className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1.5" />
             </button>
           </div>
         ))}
