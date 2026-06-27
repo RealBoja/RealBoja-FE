@@ -6,11 +6,11 @@ import Button from "@/components/common/Button";
 import PromiseCardPreview from "@/components/join/PromiseCardPreview";
 import JoinHintBox from "@/components/join/JoinHintBox";
 import {
-  getRoom,
+  getRoomDetail,
   getCard,
   getAnalysis,
   ROOM_TYPE_LABEL,
-  PURPOSE_LABEL,
+  PURPOSE_LABEL_MAP,
 } from "@/api/roomApi";
 
 export default function JoinRoomPage() {
@@ -33,7 +33,7 @@ export default function JoinRoomPage() {
     const fetchAll = async () => {
       try {
         const [roomRes, cardRes, analysisRes] = await Promise.all([
-          getRoom(roomId),
+          getRoomDetail(roomId),
           getCard(roomId),
           getAnalysis(roomId),
         ]);
@@ -42,7 +42,7 @@ export default function JoinRoomPage() {
           const rtLabel =
             ROOM_TYPE_LABEL[roomRes.data.roomType] ?? roomRes.data.roomType;
           const pLabel =
-            PURPOSE_LABEL[roomRes.data.purpose] ?? roomRes.data.purpose;
+            PURPOSE_LABEL_MAP[roomRes.data.purpose] ?? roomRes.data.purpose;
           setRoomTypeLabel(rtLabel);
           setCardMeta(`${rtLabel} · ${pLabel}`);
         }
