@@ -53,7 +53,7 @@ export default function NextCardPage() {
 
         {/* 2차 카드 */}
         <NextPromiseCard
-          cardLabel="진짜보자 2차 카드"
+          cardLabel="진짜보자 일정 카드"
           roomMeta="고등학교 친구방 · 밥"
           badgeText="시간만 좁히면 되는 단계"
           title="이제 시간만 좁혀보자"
