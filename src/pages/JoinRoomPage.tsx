@@ -10,6 +10,7 @@ import {
   getCard,
   ROOM_TYPE_LABEL,
   PURPOSE_LABEL_MAP,
+  createParticipant,
 } from "@/api/roomApi";
 import { getAnalysis } from "@/api/analysisApi";
 
@@ -62,9 +63,17 @@ export default function JoinRoomPage() {
     fetchAll();
   }, [roomCode]);
 
-  const handleJoin = () => {
-    if (!nickname.trim()) return;
-    navigate(`/card/${roomCode}/react`, { state: { nickname } });
+  const handleJoin = async () => {
+    if (!nickname.trim() || !roomCode) return;
+    try {
+      const res = await createParticipant(roomCode, nickname);
+      localStorage.setItem("participantId", String(res.data.participantId));
+      localStorage.setItem("nickname", nickname);
+      navigate(`/card/${roomCode}/react`);
+    } catch (e) {
+      console.error(e);
+      alert("입장에 실패했어요. 다시 시도해주세요.");
+    }
   };
 
   if (loading) {
