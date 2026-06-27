@@ -1,6 +1,13 @@
 // src/api/analysisApi.ts
 import api from "./axiosInstance";
 
+const api = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    "ngrok-skip-browser-warning": "true",
+  },
+});
+
 // 반응 타입 (백엔드 enum)
 export type ReactionType =
   | "REALLY_MEET"

@@ -1,6 +1,13 @@
 // src/api/roomApi.ts
 import api from "./axiosInstance";
 
+const api = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    "ngrok-skip-browser-warning": "true",
+  },
+});
+
 const ROOM_TYPE_MAP: Record<string, string> = {
   "고등학교 친구방": "HIGH_SCHOOL",
   "대학교 동기방": "UNIVERSITY",
