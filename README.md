@@ -22,7 +22,7 @@
 ## 추천 구조
 
 ```
-JinjjaBoja-Frontend/
+RealBoja-Frontend/
 ├─ src/
 │  ├─ api/
 │  ├─ components/
