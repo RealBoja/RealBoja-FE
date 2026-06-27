@@ -30,8 +30,8 @@ export default function CardResultPage() {
                 카드를 단톡방에 공유하면 친구들이 가볍게 반응할 수 있어요.
             </p>
 
-            {/* 진짜보자 카드 (제목과 간격 20) */}
-            <div className="mt-5">
+            {/* 진짜보자 카드 - 남은 공간 세로 중앙 */}
+            <div className="flex min-h-[60vh] items-center">
                 <PromiseCard
                     cardLabel="진짜보자 약속카드"
                     roomLabel="고등학교 친구방 · 밥"
