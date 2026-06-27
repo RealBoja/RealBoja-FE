@@ -37,3 +37,46 @@ export async function getAnalysis(roomCode: string): Promise<AnalysisData> {
   );
   return data.data; // { success, data, message } 에서 data만 꺼내서 반환
 }
+
+// ── 시간대 결과 조회 ───────────────────────────────────
+
+export interface TimeSlotResult {
+  timeSlot: string;
+  label: string;
+  count: number;
+  nicknames: string[];
+}
+
+export interface PlaceRecommendationGuide {
+  status: string;
+  title: string;
+  description: string;
+}
+
+export interface PlaceRecommendation {
+  area: string;
+  reason: string;
+  hashtags: string[];
+}
+
+export interface ScheduleData {
+  participantCount: number;
+  topTimeSlot: TimeSlotResult;
+  results: TimeSlotResult[];
+  placeRecommendationGuide: PlaceRecommendationGuide;
+  placeRecommendations: PlaceRecommendation[];
+}
+
+interface ScheduleResponse {
+  success: boolean;
+  data: ScheduleData;
+  message: string | null;
+}
+
+/** GET /api/rooms/{roomCode}/schedule — 시간대 결과 조회 */
+export async function getSchedule(roomCode: string): Promise<ScheduleData> {
+  const { data } = await axios.get<ScheduleResponse>(
+    `${BASE_URL}/api/rooms/${roomCode}/schedule`,
+  );
+  return data.data;
+}
