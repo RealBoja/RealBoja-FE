@@ -1,5 +1,5 @@
-import NextCardPage from "./pages/NextCardPage";
+import JoinRoomPage from "@/pages/JoinRoomPage";
 
 export default function App() {
-  return <NextCardPage />;
+  return <JoinRoomPage />;
 }
