@@ -47,13 +47,7 @@ export default function AnalysisPage({
           <div className="flex gap-2">
             <button
               onClick={onMoreReaction}
-              disabled={isMajority}
-              className={`flex-1 py-3.5 rounded-2xl border-[0.8px] text-sm font-medium transition
-                ${
-                  isMajority
-                    ? "bg-bg border-border text-muted/40 cursor-not-allowed"
-                    : "bg-bg border-border text-muted hover:bg-section"
-                }`}
+              className={`flex-1 py-3.5 rounded-2xl border-[0.8px] text-sm font-medium transition`}
             >
               한번 더 알리기
             </button>
