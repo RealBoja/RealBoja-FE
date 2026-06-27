@@ -27,6 +27,7 @@
   --color-temp-alive: #34D399;    /* 생존 확인 31-50℃ */
   --color-temp-warm: #FBBF24;     /* 온기 도는 중 51-70℃ */
   --color-temp-hot: #E9782F;      /* 진짜 볼 각 71℃+ */
+  --color-gauge-bg: #F4D8BD;      /* 온도 게이지 빈 배경 */
 
 /* Font Families */
   --font-sans: "Noto Sans KR", sans-serif;
