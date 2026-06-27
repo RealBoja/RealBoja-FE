@@ -33,11 +33,12 @@ export default function CardResultPage() {
             {/* 진짜보자 카드 (제목과 간격 20) */}
             <div className="mt-5">
                 <PromiseCard
+                    cardLabel="진짜보자 약속카드"
                     roomLabel="고등학교 친구방 · 밥"
-                    caption="이 방 마지막 만남: 거의 전설"
-                    title={"'나중에 보자'만\n반복 중"}
-                    description={"생존자 3명만 모이면\n약속 해동 시작"}
-                    initialTemp={18}
+                    badge="이 방 마지막 만남: 거의 전설"
+                    title={'"나중에 보자"만 반복 중'}
+                    description={"날짜를 정하기 전에,\n먼저 만날 마음부터 확인해볼게요."}
+                    hint="생존자 3명부터 약속 온도 상승"
                     onAction={() => {}}
                 />
             </div>
