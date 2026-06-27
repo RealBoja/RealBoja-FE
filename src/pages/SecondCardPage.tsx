@@ -52,7 +52,7 @@ export default function SecondCardPage() {
 
   return (
     <MobileLayout
-      topBar={<TopBar />}
+      topBar={<TopBar showBack onBack={() => navigate(-1)} />}
       bottomCTA={
         <Button
           variant="primary"
