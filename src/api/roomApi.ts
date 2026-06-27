@@ -1,7 +1,5 @@
 // src/api/roomApi.ts
-import axios from "axios";
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import api from "./axiosInstance";
 
 const ROOM_TYPE_MAP: Record<string, string> = {
   "고등학교 친구방": "HIGH_SCHOOL",
@@ -168,30 +166,27 @@ export async function createRoom(params: {
     tone: TONE_MAP[params.cardTone],
   };
 
-  const { data } = await axios.post<CreateRoomResponse>(
-    `${BASE_URL}/api/rooms`,
-    payload,
-  );
+  const { data } = await api.post<CreateRoomResponse>("/api/rooms", payload);
   return data;
 }
 
 export async function createCard(roomCode: string) {
-  const { data } = await axios.post<CreateCardResponse>(
-    `${BASE_URL}/api/rooms/${roomCode}/card`,
+  const { data } = await api.post<CreateCardResponse>(
+    `/api/rooms/${roomCode}/card`,
   );
   return data;
 }
 
 export async function getRoomDetail(roomCode: string) {
-  const { data } = await axios.get<RoomDetailResponse>(
-    `${BASE_URL}/api/rooms/${roomCode}`,
+  const { data } = await api.get<RoomDetailResponse>(
+    `/api/rooms/${roomCode}`,
   );
   return data;
 }
 
 export async function getCard(roomCode: string) {
-  const { data } = await axios.get<CreateCardResponse>(
-    `${BASE_URL}/api/rooms/${roomCode}/card`,
+  const { data } = await api.get<CreateCardResponse>(
+    `/api/rooms/${roomCode}/card`,
   );
   return data;
 }
@@ -199,8 +194,8 @@ export async function getCard(roomCode: string) {
 export async function createParticipant(roomCode: string, nickname: string) {
   const payload: CreateParticipantRequest = { nickname };
 
-  const { data } = await axios.post<CreateParticipantResponse>(
-    `${BASE_URL}/api/rooms/${roomCode}/participants`,
+  const { data } = await api.post<CreateParticipantResponse>(
+    `/api/rooms/${roomCode}/participants`,
     payload,
   );
   return data;
@@ -213,16 +208,16 @@ export async function createReaction(
 ) {
   const payload: CreateReactionRequest = { participantId, reactionType };
 
-  const { data } = await axios.post<CreateReactionResponse>(
-    `${BASE_URL}/api/rooms/${roomCode}/reactions`,
+  const { data } = await api.post<CreateReactionResponse>(
+    `/api/rooms/${roomCode}/reactions`,
     payload,
   );
   return data;
 }
 
 export async function advanceRoom(roomCode: string) {
-  const { data } = await axios.post<CreateCardResponse>(
-    `${BASE_URL}/api/rooms/${roomCode}/advance`,
+  const { data } = await api.post<CreateCardResponse>(
+    `/api/rooms/${roomCode}/advance`,
   );
   return data;
 }
@@ -239,8 +234,8 @@ export async function submitSchedule(
     timeSlots: timeSlotLabels.map((label) => TIME_SLOT_MAP[label]),
   };
 
-  const { data } = await axios.post<SubmitScheduleResponse>(
-    `${BASE_URL}/api/rooms/${roomCode}/schedule`,
+  const { data } = await api.post<SubmitScheduleResponse>(
+    `/api/rooms/${roomCode}/schedule`,
     payload,
   );
   return data;
