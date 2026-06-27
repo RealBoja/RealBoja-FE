@@ -37,7 +37,7 @@ const PURPOSE_MAP: Record<string, string> = {
   "그냥 얼굴 보기": "JUST_SEE",
 };
 
-export const PURPOSE_LABEL: Record<string, string> = {
+export const PURPOSE_LABEL_MAP: Record<string, string> = {
   MEAL: "밥",
   CAFE: "카페",
   DRINK: "술",
@@ -177,7 +177,7 @@ export async function createCard(roomCode: string) {
   return data;
 }
 
-export async function getRoom(roomCode: string) {
+export async function getRoomDetail(roomCode: string) {
   const { data } = await axios.get<RoomDetailResponse>(
     `${BASE_URL}/api/rooms/${roomCode}`,
   );
