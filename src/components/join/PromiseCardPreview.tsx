@@ -115,7 +115,9 @@ export default function PromiseCardPreview({
         <p className="text-sm font-bold text-text">{title}</p>
 
         {/* 설명 */}
-        <p className="pt-1 text-xs text-muted">{description}</p>
+        <p className="pt-1 text-xs text-muted">
+          {description.replace(/\\n/g, "\n")}
+        </p>
 
         {/* 메타 */}
         <div className="flex items-center gap-3 pt-3 h-[27px]">
