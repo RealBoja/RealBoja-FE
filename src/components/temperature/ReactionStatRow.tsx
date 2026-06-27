@@ -2,29 +2,50 @@ interface ReactionStatRowProps {
   emoji: string;
   label: string;
   count: number;
-  maxCount: number; // 비율 계산용 (가장 큰 값 기준)
+  names: string[]; // 참여자 닉네임 목록
 }
 
 export default function ReactionStatRow({
   emoji,
   label,
   count,
-  maxCount,
+  names,
 }: ReactionStatRowProps) {
-  const percentage = maxCount > 0 ? (count / maxCount) * 100 : 0;
+  const hasNames = names.length > 0;
 
   return (
-    <div className="flex items-center self-stretch gap-3 px-4 py-3 rounded-[14px] bg-card border-[0.8px] border-border">
-      <p className="text-base">{emoji}</p>
-      <p className="flex-grow text-sm text-text">{label}</p>
-      <div className="flex items-center gap-2">
-        <div className="h-1.5 w-16 overflow-hidden rounded-full bg-muted/20">
-          <div
-            className="h-full rounded-full bg-orange"
-            style={{ width: `${percentage}%` }}
-          />
+    <div className="flex flex-col self-stretch px-3 py-2.5 rounded-[14px] bg-card border-[0.8px] border-border">
+      {/* 상단: 이모지 + 라벨 + 인원수 */}
+      <div className="flex justify-between items-center self-stretch">
+        <div className="flex items-center gap-1.5">
+          <p className="text-base">{emoji}</p>
+          <p className="text-xs font-bold text-text">{label}</p>
         </div>
-        <p className="w-4 text-right text-sm font-bold text-text">{count}</p>
+        <p
+          className={`text-[10px] font-bold ${
+            count > 0 ? "text-orange" : "text-border"
+          }`}
+        >
+          {count}명
+        </p>
+      </div>
+
+      {/* 하단: 닉네임 칩들 */}
+      <div className="flex flex-wrap gap-1.5 pt-2">
+        {hasNames ? (
+          names.map((name) => (
+            <span
+              key={name}
+              className="px-2 py-0.5 rounded-full bg-orange-light border-[0.8px] border-border-point text-[10px] font-medium text-orange-dark"
+            >
+              {name}
+            </span>
+          ))
+        ) : (
+          <span className="px-2 py-0.5 rounded-full bg-border text-[10px] font-medium text-muted">
+            아직 없음
+          </span>
+        )}
       </div>
     </div>
   );
