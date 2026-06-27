@@ -53,7 +53,7 @@ export default function CardResultPage() {
   }, [roomCode]);
 
   const handleShare = () => {
-    const link = `${window.location.origin}/card/${roomCode}/join`;
+    const link = `${window.location.origin}/${roomCode}/card-result`;
     navigator.clipboard.writeText(link);
     alert("링크가 복사됐어요!");
   };
