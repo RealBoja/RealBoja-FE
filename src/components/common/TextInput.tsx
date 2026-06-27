@@ -1,26 +1,30 @@
-type TextInputProps = {
-  placeholder?: string;
-  value: string;
-  onChange: (value: string) => void;
-  helperText?: string;
-};
+interface TextInputProps {
+    label?: string;          // "참여자 닉네임"
+    placeholder?: string;    // "단톡방 닉네임 입력"
+    value?: string;
+    onChange?: (value: string) => void;
+}
 
-export function TextInput({
-  placeholder,
-  value,
-  onChange,
-  helperText,
-}: TextInputProps) {
-  return (
-    <div>
-      <input
-        type="text"
-        placeholder={placeholder}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full px-4 py-3 rounded-[14px] border-[0.8px] border-border bg-bg text-text text-sm placeholder:text-text/50 outline-none focus:border-orange"
-      />
-      {helperText && <p className="text-xs text-muted pt-1.5">{helperText}</p>}
-    </div>
-  );
+export default function TextInput({
+                                      label,
+                                      placeholder,
+                                      value,
+                                      onChange,
+                                  }: TextInputProps) {
+    return (
+        <div className="flex flex-col items-start self-stretch">
+            {label && (
+                <label className="pb-2 text-sm font-bold leading-5 text-text">
+                    {label}
+                </label>
+            )}
+            <input
+                type="text"
+                value={value}
+                placeholder={placeholder}
+                onChange={(e) => onChange?.(e.target.value)}
+                className="input-text focus:input-text-focus"
+            />
+        </div>
+    );
 }
