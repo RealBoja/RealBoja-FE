@@ -14,7 +14,7 @@ import {
 } from "@/api/roomApi";
 
 export default function JoinRoomPage() {
-  const { roomId } = useParams<{ roomId: string }>();
+  const { roomCode } = useParams<{ roomCode: string }>();
   const navigate = useNavigate();
 
   const [nickname, setNickname] = useState("");
@@ -28,15 +28,13 @@ export default function JoinRoomPage() {
   const [participantCount, setParticipantCount] = useState(0);
 
   useEffect(() => {
-    if (!roomId) return;
+    if (!roomCode) return;
 
     const fetchAll = async () => {
       try {
-        const [roomRes, cardRes, analysisRes] = await Promise.all([
-          getRoomDetail(roomId),
-          getCard(roomId),
-          getAnalysis(roomId),
-        ]);
+        const roomRes = await getRoomDetail(roomCode);
+        const cardRes = await getCard(roomCode);
+        const analysisRes = await getAnalysis(roomCode);
 
         if (roomRes.success) {
           const rtLabel =
@@ -65,11 +63,11 @@ export default function JoinRoomPage() {
     };
 
     fetchAll();
-  }, [roomId]);
+  }, [roomCode]);
 
   const handleJoin = () => {
     if (!nickname.trim()) return;
-    navigate(`/${roomId}/react`, { state: { nickname } });
+    navigate(`/card/${roomCode}/react`, { state: { nickname } });
   };
 
   if (loading) {
