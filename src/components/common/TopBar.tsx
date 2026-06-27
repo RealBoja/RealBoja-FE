@@ -8,7 +8,7 @@ interface TopBarProps {
 export default function TopBar({ showBack = true, onBack }: TopBarProps) {
   return (
     <div className="relative flex items-center justify-between self-stretch px-5 py-3 bg-[#fffcf6]/90 border-b-[0.8px] border-border">
-      {/* 왼쪽: 뒤로가기 버튼 */}
+      {/* 왼쪽: 뒤로가기 버튼 (없으면 같은 크기의 빈 공간) */}
       {showBack ? (
         <button
           onClick={onBack}
@@ -18,7 +18,10 @@ export default function TopBar({ showBack = true, onBack }: TopBarProps) {
           <span className="text-sm font-medium">이전</span>
         </button>
       ) : (
-        <div className="w-12" />
+        <div className="flex items-center gap-1 invisible">
+          <ChevronLeft size={18} strokeWidth={1.5} />
+          <span className="text-sm font-medium">이전</span>
+        </div>
       )}
 
       {/* 중앙: 로고 - 화면 정중앙 고정 */}

@@ -22,7 +22,7 @@ type AnalysisData = AnalysisResponse["data"];
 // 반응 타입별 이모지 (백엔드엔 이모지가 없어서 프론트에서 매핑)
 const REACTION_EMOJI: Record<ReactionType, string> = {
   REALLY_MEET: "🔥",
-  PURPOSE_OK: "🍚",
+  PURPOSE_OK: "🚶",
   IF_SOMEONE_LEADS: "🙋",
   JUST_ALIVE: "👀",
 };
@@ -82,7 +82,7 @@ export default function TemperaturePage() {
   // ── 로딩 ──
   if (loading) {
     return (
-      <MobileLayout topBar={<TopBar />}>
+      <MobileLayout topBar={<TopBar showBack={false} />}>
         <div className="flex h-full items-center justify-center py-20">
           <p className="text-sm text-muted">불러오는 중…</p>
         </div>
@@ -93,7 +93,7 @@ export default function TemperaturePage() {
   // ── 에러 ──
   if (error || !analysis) {
     return (
-      <MobileLayout topBar={<TopBar />}>
+      <MobileLayout topBar={<TopBar showBack={false} />}>
         <div className="flex flex-col items-center justify-center gap-3 py-20">
           <p className="text-sm text-muted">{error ?? "데이터가 없어요."}</p>
         </div>
@@ -117,9 +117,8 @@ export default function TemperaturePage() {
 
   return (
     <MobileLayout
-      topBar={<TopBar />}
+      topBar={<TopBar showBack={false} />}
       bottomCTA={
-        // 기존 코드에서 navigate 부분만 수정
         isUnlocked ? (
           <Button
             variant="primary"
