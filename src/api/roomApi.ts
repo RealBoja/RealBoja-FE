@@ -129,7 +129,7 @@ export interface RoomDetailResponse {
   message: string;
 }
 
-interface AnalysisResponse {
+export interface AnalysisResponse {
   success: boolean;
   data: {
     temperature: number;
@@ -218,6 +218,13 @@ export async function createReaction(
   const { data } = await axios.post<CreateReactionResponse>(
     `${BASE_URL}/api/rooms/${roomCode}/reactions`,
     payload,
+  );
+  return data;
+}
+
+export async function advanceRoom(roomCode: string) {
+  const { data } = await axios.post<CreateCardResponse>(
+      `${BASE_URL}/api/rooms/${roomCode}/advance`,
   );
   return data;
 }
