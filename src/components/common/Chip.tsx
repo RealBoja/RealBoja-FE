@@ -1,4 +1,3 @@
-// Chip.tsx
 type ChipProps = {
   label: string;
   selected?: boolean;
@@ -10,7 +9,8 @@ export function Chip({ label, selected = false, onClick }: ChipProps) {
     <button
       onClick={onClick}
       className={`
-        px-4 py-2 rounded-full border text-sm font-medium transition-colors
+        flex flex-col justify-center items-center
+        px-3 py-1.5 rounded-full border-[0.8px] text-sm font-medium transition-colors
         ${
           selected
             ? "bg-orange text-white border-orange"
