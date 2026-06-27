@@ -69,6 +69,7 @@ export default function JoinRoomPage() {
       const res = await createParticipant(roomCode, nickname);
       localStorage.setItem("participantId", String(res.data.participantId));
       localStorage.setItem("nickname", nickname);
+      localStorage.setItem("roomCode", roomCode);
       navigate(`/card/${roomCode}/react`);
     } catch (e) {
       console.error(e);

@@ -8,6 +8,7 @@ import ReactionStatRow from "../components/temperature/ReactionStatRow";
 import TempLegend from "../components/temperature/TempLegend";
 import { Users } from "../components/common/icons";
 import { getAnalysis, type AnalysisResponse } from "../api/analysisApi";
+import { getRoomDetail, PURPOSE_LABEL_MAP } from "../api/roomApi";
 
 // 반응 타입 (팀원 roomApi엔 타입이 따로 없어서 여기 정의)
 type ReactionType =
@@ -53,6 +54,7 @@ export default function TemperaturePage() {
   const navigate = useNavigate();
 
   const [analysis, setAnalysis] = useState<AnalysisData | null>(null);
+  const [purposeLabel, setPurposeLabel] = useState("목적");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -64,8 +66,14 @@ export default function TemperaturePage() {
       setLoading(true);
       setError(null);
       try {
-        const res = await getAnalysis(roomCode);
-        if (alive) setAnalysis(res);
+        const [res, roomRes] = await Promise.all([
+          getAnalysis(roomCode),
+          getRoomDetail(roomCode),
+        ]);
+        if (alive) {
+          setAnalysis(res);
+          setPurposeLabel(PURPOSE_LABEL_MAP[roomRes.data.purpose] ?? "목적");
+        }
       } catch {
         if (alive) setError("분석 정보를 불러오지 못했어요.");
       } finally {
@@ -110,7 +118,7 @@ export default function TemperaturePage() {
   const reactions = REACTION_ORDER.map((type) => ({
     type,
     emoji: REACTION_EMOJI[type],
-    label: REACTION_LABEL[type],
+    label: type === "PURPOSE_OK" ? `${purposeLabel}이면 감` : REACTION_LABEL[type],
     count: analysis.reactionSummary[type] ?? 0,
     names: analysis.reactionParticipants[type] ?? [],
   }));

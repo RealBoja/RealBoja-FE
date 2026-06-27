@@ -25,19 +25,32 @@ export default function TimeSlotResultPage() {
       .finally(() => setLoading(false));
   }, [roomCode]);
 
-  const otherSlots =
-    data?.topTimeSlot
-      ? data.results
-          .filter(
-            (r) => r.timeSlot !== data.topTimeSlot!.timeSlot && r.count > 0,
-          )
-          .slice(0, 2)
-      : [];
+  const handleShare = () => {
+    const participantId = localStorage.getItem("participantId");
+    const savedRoomCode = localStorage.getItem("roomCode");
+    if (!participantId || savedRoomCode !== roomCode) {
+      navigate(`/card/${roomCode}/join`);
+      return;
+    }
+    const link = `${window.location.origin}/card/${roomCode}/timeslot`;
+    navigator.clipboard.writeText(link);
+    alert("링크가 복사됐어요!");
+  };
+
+  const topCount = data?.topTimeSlot?.count ?? 0;
+  // topTimeSlot과 count가 같은 슬롯 전부 (동률)
+  const topSlots = data?.topTimeSlot
+    ? data.results.filter((r) => r.count === topCount)
+    : [];
+  // 그보다 낮은 count, count > 0인 나머지 전부
+  const otherSlots = data?.topTimeSlot
+    ? data.results.filter((r) => r.count > 0 && r.count < topCount)
+    : [];
 
   return (
     <MobileLayout
       topBar={<TopBar showBack onBack={() => navigate(-1)} />}
-      bottomCTA={<ShareButton>결과 카드 공유하기</ShareButton>}
+      bottomCTA={<ShareButton onClick={handleShare}>결과 카드 공유하기</ShareButton>}
     >
       {loading || !data ? (
         <div className="flex items-center justify-center h-40">
@@ -69,45 +82,43 @@ export default function TimeSlotResultPage() {
               <p className="text-sm font-bold text-white">진짜 볼 각 🔥</p>
             </div>
 
-            {/* 최다 시간대 카드 — 아무도 응답 안 한 경우 빈 상태 */}
-            {data.topTimeSlot ? (
-              <div className="flex flex-col p-3 rounded-2xl bg-card border-[0.8px] border-border">
-                <p className="text-[9px] font-bold uppercase text-orange">
-                  가장 많이 나온 시간대
-                </p>
-                <div className="flex items-center gap-2 pt-1">
-                  <p className="text-lg font-black text-text">
-                    {data.topTimeSlot.label}
-                  </p>
-                  <span className="px-2 py-0.5 rounded-full bg-orange">
-                    <p className="text-[10px] font-bold text-white">최다 선택</p>
-                  </span>
-                </div>
-                <p className="text-xs text-muted pt-1">
-                  {data.participantCount}명 중 {data.topTimeSlot.count}명이{" "}
-                  {data.topTimeSlot.label}을 선택했어요.
-                </p>
-                <div className="flex flex-wrap gap-1.5 pt-2">
-                  {data.topTimeSlot.nicknames.map((name) => (
-                    <span
-                      key={name}
-                      className="px-2 py-0.5 rounded-full bg-orange-light border-[0.8px] border-border-point text-[10px] font-medium text-orange-dark"
-                    >
-                      {name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col p-3 rounded-2xl bg-card border-[0.8px] border-border">
-                <p className="text-[9px] font-bold uppercase text-orange">
-                  가장 많이 나온 시간대
-                </p>
+            {/* 최다 시간대 카드 */}
+            <div className="flex flex-col p-3 rounded-2xl bg-card border-[0.8px] border-border">
+              <p className="text-[9px] font-bold uppercase text-orange">
+                가장 많이 나온 시간대
+              </p>
+              {topSlots.length === 0 ? (
                 <p className="text-sm text-muted pt-2">
                   아직 시간대를 선택한 친구가 없어요.
                 </p>
-              </div>
-            )}
+              ) : (
+                <div className="flex flex-col divide-y divide-border">
+                  {topSlots.map((slot) => (
+                    <div key={slot.timeSlot} className="pt-2 first:pt-1 pb-2 last:pb-0">
+                      <div className="flex items-center gap-2">
+                        <p className="text-lg font-black text-text">{slot.label}</p>
+                        <span className="px-2 py-0.5 rounded-full bg-orange">
+                          <p className="text-[10px] font-bold text-white">최다 선택</p>
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted pt-0.5">
+                        {data.participantCount}명 중 {slot.count}명 선택
+                      </p>
+                      <div className="flex flex-wrap gap-1.5 pt-1.5">
+                        {slot.nicknames.map((name) => (
+                          <span
+                            key={name}
+                            className="px-2 py-0.5 rounded-full bg-orange-light border-[0.8px] border-border-point text-[10px] font-medium text-orange-dark"
+                          >
+                            {name}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
             {/* 기타 시간대 2개 나란히 */}
             {otherSlots.length > 0 && (
