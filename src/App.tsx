@@ -17,7 +17,7 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/create" element={<CardFormPage />} />
         <Route path="/:roomId/card-result" element={<CardResultPage />} />
-        <Route path="/:roomId/join" element={<JoinRoomPage />} />
+        <Route path="/card/:roomId/join" element={<JoinRoomPage />} />
         <Route path="/:roomId/react" element={<ReactRoomPage />} />
         <Route path="/:roomId/analysis" element={<AnalysisPage />} />
         <Route path="/:roomId/next" element={<NextCardPage />} />

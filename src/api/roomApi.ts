@@ -12,6 +12,16 @@ const ROOM_TYPE_MAP: Record<string, string> = {
   기타: "OTHER",
 };
 
+export const ROOM_TYPE_LABEL: Record<string, string> = {
+  HIGH_SCHOOL: "고등학교 친구방",
+  UNIVERSITY: "대학교 동기방",
+  CLUB: "동아리/모임방",
+  EX_COWORKER: "전 직장 동료방",
+  PROJECT_TEAM: "프로젝트 끝난 팀방",
+  FAMILY: "가족/친척방",
+  OTHER: "기타",
+};
+
 const LAST_MEETING_MAP: Record<string, string> = {
   "1달전": "ONE_MONTH",
   반년전: "HALF_YEAR",
@@ -104,10 +114,27 @@ export interface RoomDetailResponse {
     roomSize: number;
     purpose: string;
     tone: string;
-    currentStep: "WARMING" | "SCHEDULING";
+    currentStep: string;
     createdAt: string;
   };
-  message: string | null;
+  message: string;
+}
+
+interface AnalysisResponse {
+  success: boolean;
+  data: {
+    temperature: number;
+    statusType: string;
+    statusLabel: string;
+    participantCount: number;
+    roomSize: number;
+    participationRate: number;
+    reactionSummary: Record<string, number>;
+    reactionParticipants: Record<string, string[]>;
+    summary: string;
+    nextAction: string;
+  };
+  message: string;
 }
 
 export async function createRoom(params: {
@@ -139,6 +166,9 @@ export async function createCard(roomCode: string) {
   return data;
 }
 
+export async function getRoom(roomCode: string) {
+  const { data } = await axios.get<RoomResponse>(
+    `${BASE_URL}/api/rooms/${roomCode}`,
 export async function createParticipant(roomCode: string, nickname: string) {
   const payload: CreateParticipantRequest = { nickname };
 
@@ -149,6 +179,9 @@ export async function createParticipant(roomCode: string, nickname: string) {
   return data;
 }
 
+export async function getCard(roomCode: string) {
+  const { data } = await axios.get<CreateCardResponse>(
+    `${BASE_URL}/api/rooms/${roomCode}/card`,
 export async function createReaction(
   roomCode: string,
   participantId: number,
@@ -163,6 +196,12 @@ export async function createReaction(
   return data;
 }
 
+export async function getAnalysis(roomCode: string) {
+  const { data } = await axios.get<AnalysisResponse>(
+    `${BASE_URL}/api/rooms/${roomCode}/analysis`,
+  );
+  return data;
+}
 export async function getRoomDetail(roomCode: string) {
   const { data } = await axios.get<RoomDetailResponse>(
     `${BASE_URL}/api/rooms/${roomCode}`,
