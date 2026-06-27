@@ -7,11 +7,17 @@ import TemperatureGauge from "../components/temperature/TemperatureGauge";
 import ReactionStatRow from "../components/temperature/ReactionStatRow";
 import TempLegend from "../components/temperature/TempLegend";
 import { Users } from "../components/common/icons";
-import {
-  getAnalysis,
-  type AnalysisData,
-  type ReactionType,
-} from "../api/analysisApi";
+import { getAnalysis, type AnalysisResponse } from "../api/roomApi";
+
+// 반응 타입 (팀원 roomApi엔 타입이 따로 없어서 여기 정의)
+type ReactionType =
+    | "REALLY_MEET"
+    | "PURPOSE_OK"
+    | "IF_SOMEONE_LEADS"
+    | "JUST_ALIVE";
+
+// analysis 응답의 data 부분 타입
+type AnalysisData = AnalysisResponse["data"];
 
 // 반응 타입별 이모지 (백엔드엔 이모지가 없어서 프론트에서 매핑)
 const REACTION_EMOJI: Record<ReactionType, string> = {
@@ -56,10 +62,10 @@ export default function TemperaturePage() {
     setLoading(true);
     setError(null);
 
-    getAnalysis(roomCode)
-        .then((data) => {
-          if (alive) setAnalysis(data);
-        })
+      getAnalysis(roomCode)
+          .then((res) => {
+              if (alive) setAnalysis(res.data);
+          })
         .catch(() => {
           if (alive) setError("분석 정보를 불러오지 못했어요.");
         })
