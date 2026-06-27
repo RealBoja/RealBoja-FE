@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap");
 
 @theme {
   /* Backgrounds */
@@ -6,15 +7,24 @@
   --color-section: #FFF8EC;
   --color-cardWeak: #FFF7EA;
   --color-card: #FFFFFF;
-    --color-text: #24150E;        /* Text Main */
-    --color-muted: #7B6658;       /* Text Muted */
-    --color-border: #EEDCCB;      /* Border */
-    --color-border-point: #F0BE83; /* Border Point */
 
-    --color-temp-cold: #60A5FA;     /* 냉동방 0-30℃ */
-    --color-temp-alive: #34D399;    /* 생존 확인 31-50℃ */
-    --color-temp-warm: #FBBF24;     /* 온기 도는 중 51-70℃ */
-    --color-temp-hot: #E9782F;      /* 진짜 볼 각 71℃+ */
+  /* Text */
+  --color-text: #24150E;          /* Text Main */
+  --color-muted: #7B6658;         /* Text Muted */
+
+  /* Border */
+  --color-border: #EEDCCB;        /* Border */
+  --color-border-point: #F0BE83;  /* Border Point */
+
+  /* Semantic - 약속 온도 */
+  --color-temp-cold: #60A5FA;     /* 냉동방 0-30℃ */
+  --color-temp-alive: #34D399;    /* 생존 확인 31-50℃ */
+  --color-temp-warm: #FBBF24;     /* 온기 도는 중 51-70℃ */
+  --color-temp-hot: #E9782F;      /* 진짜 볼 각 71℃+ */
+
+  /* Font Families */
+  --font-sans: "Noto Sans KR", sans-serif;
+  --font-brand: "Nunito", sans-serif;
 }
 
 /* Type Scale */
