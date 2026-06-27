@@ -3,6 +3,13 @@ import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+const api = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    "ngrok-skip-browser-warning": "true",
+  },
+});
+
 // 반응 타입 (백엔드 enum)
 export type ReactionType =
   | "REALLY_MEET"
@@ -32,8 +39,8 @@ export interface AnalysisResponse {
 
 /** GET /api/rooms/{roomCode}/analysis — 방 분석(온도/반응) 조회 */
 export async function getAnalysis(roomCode: string): Promise<AnalysisData> {
-  const { data } = await axios.get<AnalysisResponse>(
-    `${BASE_URL}/api/rooms/${roomCode}/analysis`,
+  const { data } = await api.get<AnalysisResponse>(
+    `/api/rooms/${roomCode}/analysis`,
   );
   return data.data; // { success, data, message } 에서 data만 꺼내서 반환
 }
@@ -75,8 +82,8 @@ interface ScheduleResponse {
 
 /** GET /api/rooms/{roomCode}/schedule — 시간대 결과 조회 */
 export async function getSchedule(roomCode: string): Promise<ScheduleData> {
-  const { data } = await axios.get<ScheduleResponse>(
-    `${BASE_URL}/api/rooms/${roomCode}/schedule`,
+  const { data } = await api.get<ScheduleResponse>(
+    `/api/rooms/${roomCode}/schedule`,
   );
   return data.data;
 }
