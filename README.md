@@ -16,12 +16,13 @@
 
 ## 관련 레포지토리
 
-- Backend: https://github.com/JinjjaBoja/JinjjaBoja-BE
-- Docs hub: https://github.com/JinjjaBoja/JinjjaBoja
+- Backend: https://github.com/RealBoja/RealBoja-BE
+- Docs hub: https://github.com/RealBoja/RealBoja
 
 ## 추천 구조
 
-`JinjjaBoja-Frontend/
+```
+JinjjaBoja-Frontend/
 ├─ src/
 │  ├─ api/
 │  ├─ components/
@@ -29,7 +30,8 @@
 │  ├─ pages/
 │  └─ store/
 ├─ public/
-└─ .github/`
+└─ .github/
+```
 
 ## MVP 화면
 
@@ -64,10 +66,12 @@ docs/{doc-name}`
 
 ## 커밋 컨벤션
 
-`feat: add wake card preview screen
+```
+feat: add wake card preview screen
 fix: disable reaction button without nickname
 chore: configure vite project
-docs: update component guide`
+docs: update component guide
+```
 
 | 타입 | 언제 쓰나 |
 | --- | --- |
