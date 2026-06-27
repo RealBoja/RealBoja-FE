@@ -66,7 +66,7 @@ export default function CardFormPage() {
 
   return (
     <MobileLayout
-      topBar={<TopBar />}
+      topBar={<TopBar showBack onBack={() => navigate("/")} />}
       bottomCTA={
         <Button
           variant="primary"

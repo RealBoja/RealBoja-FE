@@ -12,7 +12,7 @@ export default function TopBar({ showBack = true, onBack }: TopBarProps) {
       {showBack ? (
         <button
           onClick={onBack}
-          className="flex items-center gap-1 text-[#7b6658]"
+          className="flex items-center gap-1 text-[#7b6658] cursor-pointer"
         >
           <ChevronLeft size={18} strokeWidth={1.5} />
           <span className="text-sm font-medium">이전</span>
