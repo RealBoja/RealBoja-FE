@@ -1,7 +1,7 @@
 // src/api/analysisApi.ts
 import axios from "axios";
 
-const BASE_URL = "http://10.210.97.99:8080";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // 반응 타입 (백엔드 enum)
 export type ReactionType =
