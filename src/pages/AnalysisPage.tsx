@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import html2canvas from "html2canvas";
+import { toPng } from "html-to-image";
 import MobileLayout from "../components/layout/MobileLayout";
 import TopBar from "../components/common/TopBar";
 import ShareButton from "../components/common/ShareButton";
@@ -157,36 +157,31 @@ export default function AnalysisPage() {
     }
 
     try {
-      const canvas = await html2canvas(cardRef.current, {
-        backgroundColor: null,
-        scale: 2,
-        useCORS: true,
-      });
+      const dataUrl = await toPng(cardRef.current, { pixelRatio: 2 });
+      const blob = await (await fetch(dataUrl)).blob();
+      const file = new File([blob], "realboja-result.png", { type: "image/png" });
 
-      canvas.toBlob(async (blob) => {
-        if (!blob) return;
+      await navigator.clipboard.writeText(shareUrl);
 
-        if (navigator.share) {
-          const file = new File([blob], "realboja-result.png", { type: "image/png" });
-          try {
-            await navigator.share({
-              title: "진짜보자 방 분석 결과",
-              text: `우리 방 약속 온도는 ${temp}℃! 결과를 확인해봐요 👇`,
-              url: shareUrl,
-              files: [file],
-            });
-          } catch {
-            await navigator.share({ title: "진짜보자 방 분석 결과", url: shareUrl });
-          }
-        } else {
-          const a = document.createElement("a");
-          a.href = URL.createObjectURL(blob);
-          a.download = "realboja-result.png";
-          a.click();
-          await navigator.clipboard.writeText(shareUrl);
-          alert("카드 이미지를 저장했어요! 링크도 복사됐어요 😊");
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "진짜보자 방 분석 결과",
+            text: `우리 방 약속 온도는 ${temp}℃! 결과를 확인해봐요 👇`,
+            url: shareUrl,
+            files: [file],
+          });
+        } catch {
+          await navigator.share({ title: "진짜보자 방 분석 결과", url: shareUrl });
         }
-      }, "image/png");
+      } else {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "realboja-result.png";
+        a.click();
+        await navigator.clipboard.writeText(shareUrl);
+        alert("카드 이미지를 저장했어요! 링크도 복사됐어요 😊");
+      }
     } catch (e) {
       console.error(e);
       await navigator.clipboard.writeText(shareUrl);

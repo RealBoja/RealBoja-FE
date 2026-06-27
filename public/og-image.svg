@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#fffcf6"/>
+
+  <!-- Warm card area -->
+  <rect x="80" y="80" width="520" height="470" rx="32" fill="#fff7ea" stroke="#eedccb" stroke-width="1.5"/>
+
+  <!-- Badge -->
+  <rect x="120" y="130" width="168" height="44" rx="22" fill="#e9782f"/>
+  <text x="204" y="158" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#ffffff" text-anchor="middle">진짜보자 👀</text>
+
+  <!-- Title -->
+  <text x="120" y="230" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="800" fill="#24150e">약속만 잡으면</text>
+  <text x="120" y="274" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="800" fill="#24150e">진짜 볼 수 있어</text>
+
+  <!-- Body -->
+  <text x="120" y="330" font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#9a7a5e">우리 방 약속 온도를 확인하고</text>
+  <text x="120" y="356" font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#9a7a5e">반응을 남겨봐요.</text>
+
+  <!-- Temperature display -->
+  <rect x="120" y="400" width="220" height="90" rx="16" fill="#ffffff" stroke="#eedccb" stroke-width="1"/>
+  <text x="230" y="436" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#9a7a5e" text-anchor="middle">약속 온도</text>
+  <text x="230" y="478" font-family="system-ui, -apple-system, sans-serif" font-size="36" font-weight="900" fill="#e9782f" text-anchor="middle">67℃</text>
+
+  <!-- Right side text -->
+  <text x="680" y="240" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="900" fill="#24150e">우리</text>
+  <text x="680" y="304" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="900" fill="#24150e">언제</text>
+  <text x="680" y="368" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="900" fill="#e9782f">진짜</text>
+  <text x="680" y="432" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="900" fill="#24150e">보지?</text>
+
+  <!-- Tagline -->
+  <text x="680" y="510" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#9a7a5e">약속 온도를 높여봐요 🔥</text>
+
+  <!-- Bottom brand -->
+  <text x="600" y="590" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" fill="#c8a882" text-anchor="middle">진짜보자 — 약속 온도 측정 서비스</text>
+</svg>
