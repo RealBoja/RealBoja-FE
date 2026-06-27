@@ -24,6 +24,7 @@ export default function App() {
         <Route path="/:roomCode/second" element={<SecondCardPage />} />
         <Route path="/:roomCode/temperature" element={<TemperaturePage />} />
         <Route path="/:roomCode/timeslot" element={<TimeSlotResultPage />} />
+
       </Routes>
     </BrowserRouter>
   );

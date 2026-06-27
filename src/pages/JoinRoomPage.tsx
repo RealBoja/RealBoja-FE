@@ -1,22 +1,84 @@
-// src/pages/JoinRoomPage.tsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import MobileLayout from "@/components/layout/MobileLayout";
 import TextInput from "@/components/common/TextInput";
 import Button from "@/components/common/Button";
 import PromiseCardPreview from "@/components/join/PromiseCardPreview";
 import JoinHintBox from "@/components/join/JoinHintBox";
+import {
+  getRoomDetail,
+  getCard,
+  getAnalysis,
+  ROOM_TYPE_LABEL,
+  PURPOSE_LABEL_MAP,
+} from "@/api/roomApi";
 
-interface JoinRoomPageProps {
-  onJoin?: (nickname: string) => void;
-}
+export default function JoinRoomPage() {
+  const { roomId } = useParams<{ roomId: string }>();
+  const navigate = useNavigate();
 
-export default function JoinRoomPage({ onJoin }: JoinRoomPageProps) {
   const [nickname, setNickname] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [roomTypeLabel, setRoomTypeLabel] = useState("");
+  const [cardMeta, setCardMeta] = useState("");
+  const [cardTitle, setCardTitle] = useState("");
+  const [cardBody, setCardBody] = useState("");
+  const [cardCtaText, setCardCtaText] = useState("");
+  const [temperature, setTemperature] = useState(0);
+  const [participantCount, setParticipantCount] = useState(0);
+
+  useEffect(() => {
+    if (!roomId) return;
+
+    const fetchAll = async () => {
+      try {
+        const [roomRes, cardRes, analysisRes] = await Promise.all([
+          getRoomDetail(roomId),
+          getCard(roomId),
+          getAnalysis(roomId),
+        ]);
+
+        if (roomRes.success) {
+          const rtLabel =
+            ROOM_TYPE_LABEL[roomRes.data.roomType] ?? roomRes.data.roomType;
+          const pLabel =
+            PURPOSE_LABEL_MAP[roomRes.data.purpose] ?? roomRes.data.purpose;
+          setRoomTypeLabel(rtLabel);
+          setCardMeta(`${rtLabel} · ${pLabel}`);
+        }
+
+        if (cardRes.success) {
+          setCardTitle(cardRes.data.title);
+          setCardBody(cardRes.data.body);
+          setCardCtaText(cardRes.data.ctaText);
+        }
+
+        if (analysisRes.success) {
+          setTemperature(analysisRes.data.temperature);
+          setParticipantCount(analysisRes.data.participantCount);
+        }
+      } catch (err) {
+        console.error("데이터 로딩 실패:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAll();
+  }, [roomId]);
 
   const handleJoin = () => {
     if (!nickname.trim()) return;
-    onJoin?.(nickname);
+    navigate(`/${roomId}/react`, { state: { nickname } });
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-bg">
+        <p className="text-sm text-muted">불러오는 중...</p>
+      </div>
+    );
+  }
 
   return (
     <MobileLayout
@@ -50,18 +112,18 @@ export default function JoinRoomPage({ onJoin }: JoinRoomPageProps) {
         <div className="px-3 py-1.5 rounded-full bg-orange">
           <p className="text-xs font-bold text-white">공유된 약속방</p>
         </div>
-        <p className="text-xs text-muted">고등학교 친구방</p>
+        <p className="text-xs text-muted">{roomTypeLabel}</p>
       </div>
 
       {/* 진짜보자 카드 미리보기 */}
       <div className="pb-6">
         <PromiseCardPreview
-          cardMeta="고등학교 친구방 · 밥"
-          badgeText="1년째 조용한 방 발견"
-          title="'나중에 보자'만 반복 중"
-          description="생존자 3명만 모이면 약속 해동 시작"
-          temp={18}
-          reactionCount={3}
+          cardMeta={cardMeta}
+          badgeText={cardCtaText}
+          title={cardTitle}
+          description={cardBody}
+          temp={temperature}
+          reactionCount={participantCount}
         />
       </div>
 

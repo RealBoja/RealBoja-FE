@@ -1,3 +1,4 @@
+// src/api/roomApi.ts
 import axios from "axios";
 
 const BASE_URL = "http://10.210.97.99:8080";
@@ -10,6 +11,16 @@ const ROOM_TYPE_MAP: Record<string, string> = {
   "프로젝트 끝난 팀방": "PROJECT_TEAM",
   "가족/친척방": "FAMILY",
   기타: "OTHER",
+};
+
+export const ROOM_TYPE_LABEL: Record<string, string> = {
+  HIGH_SCHOOL: "고등학교 친구방",
+  UNIVERSITY: "대학교 동기방",
+  CLUB: "동아리/모임방",
+  EX_COWORKER: "전 직장 동료방",
+  PROJECT_TEAM: "프로젝트 끝난 팀방",
+  FAMILY: "가족/친척방",
+  OTHER: "기타",
 };
 
 const LAST_MEETING_MAP: Record<string, string> = {
@@ -26,7 +37,6 @@ const PURPOSE_MAP: Record<string, string> = {
   "그냥 얼굴 보기": "JUST_SEE",
 };
 
-// enum 값 -> 한글 라벨 역매핑 (반응 화면에서 "OO이면 감" 만들 때 사용)
 export const PURPOSE_LABEL_MAP: Record<string, string> = {
   MEAL: "밥",
   CAFE: "카페",
@@ -40,6 +50,15 @@ const TONE_MAP: Record<string, string> = {
   킹받게: "ANNOYING",
   감성적으로: "EMOTIONAL",
 };
+
+export const REACTION_ID_TO_TYPE: Record<string, string> = {
+  fire: "REALLY_MEET",
+  rice: "PURPOSE_OK",
+  grab: "IF_SOMEONE_LEADS",
+  eyes: "JUST_ALIVE",
+};
+
+// ── 인터페이스 ──────────────────────────────────────
 
 interface CreateRoomRequest {
   roomType: string;
@@ -104,11 +123,30 @@ export interface RoomDetailResponse {
     roomSize: number;
     purpose: string;
     tone: string;
-    currentStep: "WARMING" | "SCHEDULING";
+    currentStep: string;
     createdAt: string;
   };
-  message: string | null;
+  message: string;
 }
+
+interface AnalysisResponse {
+  success: boolean;
+  data: {
+    temperature: number;
+    statusType: string;
+    statusLabel: string;
+    participantCount: number;
+    roomSize: number;
+    participationRate: number;
+    reactionSummary: Record<string, number>;
+    reactionParticipants: Record<string, string[]>;
+    summary: string;
+    nextAction: string;
+  };
+  message: string;
+}
+
+// ── API 함수 ──────────────────────────────────────
 
 export async function createRoom(params: {
   roomType: string;
@@ -139,6 +177,27 @@ export async function createCard(roomCode: string) {
   return data;
 }
 
+export async function getRoomDetail(roomCode: string) {
+  const { data } = await axios.get<RoomDetailResponse>(
+    `${BASE_URL}/api/rooms/${roomCode}`,
+  );
+  return data;
+}
+
+export async function getCard(roomCode: string) {
+  const { data } = await axios.get<CreateCardResponse>(
+    `${BASE_URL}/api/rooms/${roomCode}/card`,
+  );
+  return data;
+}
+
+export async function getAnalysis(roomCode: string) {
+  const { data } = await axios.get<AnalysisResponse>(
+    `${BASE_URL}/api/rooms/${roomCode}/analysis`,
+  );
+  return data;
+}
+
 export async function createParticipant(roomCode: string, nickname: string) {
   const payload: CreateParticipantRequest = { nickname };
 
@@ -152,7 +211,7 @@ export async function createParticipant(roomCode: string, nickname: string) {
 export async function createReaction(
   roomCode: string,
   participantId: number,
-  reactionType: string, // ReactionGrid에서 이미 enum 값으로 넘어옴
+  reactionType: string,
 ) {
   const payload: CreateReactionRequest = { participantId, reactionType };
 
@@ -162,17 +221,3 @@ export async function createReaction(
   );
   return data;
 }
-
-export async function getRoomDetail(roomCode: string) {
-  const { data } = await axios.get<RoomDetailResponse>(
-    `${BASE_URL}/api/rooms/${roomCode}`,
-  );
-  return data;
-}
-
-export const REACTION_ID_TO_TYPE: Record<string, string> = {
-  fire: "REALLY_MEET",
-  rice: "PURPOSE_OK",
-  grab: "IF_SOMEONE_LEADS",
-  eyes: "JUST_ALIVE",
-};
