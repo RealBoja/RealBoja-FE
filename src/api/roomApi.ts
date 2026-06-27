@@ -197,3 +197,10 @@ export async function createReaction(
   );
   return data;
 }
+
+export async function advanceRoom(roomCode: string) {
+  const { data } = await axios.post<CreateCardResponse>(
+      `${BASE_URL}/api/rooms/${roomCode}/advance`,
+  );
+  return data;
+}
