@@ -112,7 +112,8 @@ export default function TemperaturePage() {
   // ── 정상 데이터 ──
   const respondedCount = analysis.participantCount;
   const totalCount = analysis.roomSize;
-  const isUnlocked = respondedCount >= unlockThreshold(totalCount);
+  const hasReacted = localStorage.getItem(`reacted_${roomCode}`) === "true";
+  const isUnlocked = respondedCount >= unlockThreshold(totalCount) || hasReacted;
 
   // 응답 → 화면용 반응 배열로 변환
   const reactions = REACTION_ORDER.map((type) => ({
