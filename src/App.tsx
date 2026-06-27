@@ -16,14 +16,20 @@ export default function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/create" element={<CardFormPage />} />
-        <Route path="/:roomCode/card-result" element={<CardResultPage />} />
+        <Route path="/card/:roomCode/result" element={<CardResultPage />} />
         <Route path="/card/:roomCode/join" element={<JoinRoomPage />} />
         <Route path="/card/:roomCode/react" element={<ReactRoomPage />} />
         <Route path="/card/:roomCode/analysis" element={<AnalysisPage />} />
-        <Route path="/:roomCode/next" element={<NextCardPage />} />
-        <Route path="/:roomCode/second" element={<SecondCardPage />} />
-        <Route path="/:roomCode/temperature" element={<TemperaturePage />} />
-        <Route path="/:roomCode/timeslot" element={<TimeSlotResultPage />} />
+        <Route path="/card/:roomCode/next" element={<NextCardPage />} />
+        <Route path="/card/:roomCode/second" element={<SecondCardPage />} />
+        <Route
+          path="/card/:roomCode/temperature"
+          element={<TemperaturePage />}
+        />
+        <Route
+          path="/card/:roomCode/timeslot"
+          element={<TimeSlotResultPage />}
+        />
       </Routes>
     </BrowserRouter>
   );
