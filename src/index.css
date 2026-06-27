@@ -5,4 +5,9 @@
     --color-muted: #7B6658;       /* Text Muted */
     --color-border: #EEDCCB;      /* Border */
     --color-border-point: #F0BE83; /* Border Point */
+
+    --color-temp-cold: #60A5FA;     /* 냉동방 0-30℃ */
+    --color-temp-alive: #34D399;    /* 생존 확인 31-50℃ */
+    --color-temp-warm: #FBBF24;     /* 온기 도는 중 51-70℃ */
+    --color-temp-hot: #E9782F;      /* 진짜 볼 각 71℃+ */
 }
