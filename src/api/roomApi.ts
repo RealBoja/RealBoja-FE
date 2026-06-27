@@ -1,7 +1,5 @@
 // src/api/roomApi.ts
-import axios from "axios";
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import api from "./axiosInstance";
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -175,7 +173,7 @@ export async function createRoom(params: {
     tone: TONE_MAP[params.cardTone],
   };
 
-  const { data } = await api.post<CreateRoomResponse>(`/api/rooms`, payload);
+  const { data } = await api.post<CreateRoomResponse>("/api/rooms", payload);
   return data;
 }
 
@@ -187,7 +185,9 @@ export async function createCard(roomCode: string) {
 }
 
 export async function getRoomDetail(roomCode: string) {
-  const { data } = await api.get<RoomDetailResponse>(`/api/rooms/${roomCode}`);
+  const { data } = await api.get<RoomDetailResponse>(
+    `/api/rooms/${roomCode}`,
+  );
   return data;
 }
 

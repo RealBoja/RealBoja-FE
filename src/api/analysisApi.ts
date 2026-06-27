@@ -1,7 +1,5 @@
 // src/api/analysisApi.ts
-import axios from "axios";
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import api from "./axiosInstance";
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -42,7 +40,7 @@ export async function getAnalysis(roomCode: string): Promise<AnalysisData> {
   const { data } = await api.get<AnalysisResponse>(
     `/api/rooms/${roomCode}/analysis`,
   );
-  return data.data; // { success, data, message } 에서 data만 꺼내서 반환
+  return data.data;
 }
 
 // ── 시간대 결과 조회 ───────────────────────────────────
