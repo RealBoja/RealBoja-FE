@@ -1,6 +1,5 @@
 import MobileLayout from "../components/layout/MobileLayout";
 import TopBar from "../components/common/TopBar";
-import ShareButton from "../components/common/ShareButton";
 import AnalysisSummaryCard from "../components/analysis/AnalysisSummaryCard";
 import RecommendActionBox from "../components/analysis/RecommendActionBox";
 
@@ -19,7 +18,7 @@ const stages = [
   { label: "진짜 볼 각", active: false },
 ];
 
-const participantCount = 5;
+const participantCount = 3;
 const totalCount = 8;
 
 // 과반수 여부: 반응한 사람이 전체 인원의 절반 초과
@@ -34,7 +33,6 @@ interface AnalysisPageProps {
 
 export default function AnalysisPage({
   onBack,
-  onShare,
   onMoreReaction,
   onNextCard,
 }: AnalysisPageProps) {
@@ -42,28 +40,25 @@ export default function AnalysisPage({
     <MobileLayout
       topBar={<TopBar showBack onBack={onBack} />}
       bottomCTA={
-        <div className="flex flex-col gap-2">
-          <ShareButton onClick={onShare}>결과 카드 공유하기</ShareButton>
-          <div className="flex gap-2">
-            <button
-              onClick={onMoreReaction}
-              className={`flex-1 py-3.5 rounded-2xl border-[0.8px] text-sm font-medium transition`}
-            >
-              한번 더 알리기
-            </button>
-            <button
-              onClick={onNextCard}
-              disabled={!isMajority}
-              className={`flex-1 py-3.5 rounded-2xl border-[0.8px] text-sm font-medium transition
-                ${
-                  isMajority
-                    ? "bg-bg border-border text-muted hover:bg-section"
-                    : "bg-bg border-border text-muted/40 cursor-not-allowed"
-                }`}
-            >
-              일정 조율하기
-            </button>
-          </div>
+        <div className="flex gap-2">
+          <button
+            onClick={onMoreReaction}
+            className="flex-1 py-3.5 rounded-2xl border-[0.8px] border-orange bg-orange text-sm font-medium text-white transition hover:bg-orange-dark"
+          >
+            한번 더 알리기
+          </button>
+          <button
+            onClick={onNextCard}
+            disabled={!isMajority}
+            className={`flex-1 py-3.5 rounded-2xl border-[0.8px] text-sm font-medium transition
+      ${
+        isMajority
+          ? "bg-orange border-orange text-white hover:bg-orange-dark"
+          : "bg-[#eedccb] border-[#eedccb] text-muted cursor-not-allowed"
+      }`}
+          >
+            일정 조율하기
+          </button>
         </div>
       }
     >
