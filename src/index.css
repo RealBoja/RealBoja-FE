@@ -3,43 +3,43 @@
 
 @theme {
   /* Backgrounds */
-  --color-bg: #FFFCF6;
-  --color-section: #FFF8EC;
-  --color-cardWeak: #FFF7EA;
-  --color-card: #FFFFFF;
+  --color-bg: #fffcf6;
+  --color-section: #fff8ec;
+  --color-cardWeak: #fff7ea;
+  --color-card: #ffffff;
 
   /* Brand - Primary Orange */
-  --color-orange: #E9782F;        /* C.orange - Primary */
-  --color-orange-dark: #D85F1F;   /* C.orangeDark - hover/pressed */
-  --color-orange-light: #FFF1E3;  /* C.orangeLight */
-  --color-kakao: #FEE500;         /* C.kakao - 카카오 노랑 */
+  --color-orange: #e9782f; /* C.orange - Primary */
+  --color-orange-dark: #d85f1f; /* C.orangeDark - hover/pressed */
+  --color-orange-light: #fff1e3; /* C.orangeLight */
+  --color-kakao: #fee500; /* C.kakao - 카카오 노랑 */
 
   /* Text */
-  --color-text: #24150E;          /* Text Main */
-  --color-muted: #7B6658;         /* Text Muted */
+  --color-text: #24150e; /* Text Main */
+  --color-muted: #7b6658; /* Text Muted */
 
   /* Border */
-  --color-border: #EEDCCB;        /* Border */
-  --color-border-point: #F0BE83;  /* Border Point */
+  --color-border: #eedccb; /* Border */
+  --color-border-point: #f0be83; /* Border Point */
 
   /* Semantic - 약속 온도 */
-  --color-temp-cold: #60A5FA;     /* 냉동방 0-30℃ */
-  --color-temp-alive: #34D399;    /* 생존 확인 31-50℃ */
-  --color-temp-warm: #FBBF24;     /* 온기 도는 중 51-70℃ */
-  --color-temp-hot: #E9782F;      /* 진짜 볼 각 71℃+ */
+  --color-temp-cold: #60a5fa; /* 냉동방 0-30℃ */
+  --color-temp-alive: #34d399; /* 생존 확인 31-50℃ */
+  --color-temp-warm: #fbbf24; /* 온기 도는 중 51-70℃ */
+  --color-temp-hot: #e9782f; /* 진짜 볼 각 71℃+ */
 
-/* Font Families */
+  /* Font Families */
   --font-sans: "Noto Sans KR", sans-serif;
   --font-brand: "Nunito", sans-serif;
 
   /* Spacing Scale (기준: 4px) */
-  --spacing-1: 4px;   /* 아이콘 내부 간격 */
-  --spacing-2: 8px;   /* chip 내부 padding */
-  --spacing-3: 12px;  /* 카드 내부 소항목 gap */
-  --spacing-4: 16px;  /* 카드 패딩 */
-  --spacing-5: 20px;  /* 화면 좌우 패딩 (px-5) */
-  --spacing-6: 24px;  /* 섹션 상하 간격 */
-  --spacing-8: 32px;  /* 화면 하단 버튼 영역 */
+  --spacing-1: 4px; /* 아이콘 내부 간격 */
+  --spacing-2: 8px; /* chip 내부 padding */
+  --spacing-3: 12px; /* 카드 내부 소항목 gap */
+  --spacing-4: 16px; /* 카드 패딩 */
+  --spacing-5: 20px; /* 화면 좌우 패딩 (px-5) */
+  --spacing-6: 24px; /* 섹션 상하 간격 */
+  --spacing-8: 32px; /* 화면 하단 버튼 영역 */
 }
 
 /* Type Scale */
@@ -83,4 +83,26 @@
   font-size: 10px;
   font-weight: 700;
   line-height: 1.4;
+}
+
+@utility chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1.5px solid var(--color-border);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  white-space: nowrap;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+
+@utility chip-selected {
+  background-color: var(--color-orange);
+  color: #ffffff;
+  border-color: var(--color-orange);
 }
