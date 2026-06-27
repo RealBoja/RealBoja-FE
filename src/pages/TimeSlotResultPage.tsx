@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { toPng } from "html-to-image";
 import MobileLayout from "../components/layout/MobileLayout";
 import TopBar from "../components/common/TopBar";
 import ShareButton from "../components/common/ShareButton";
@@ -13,6 +14,7 @@ export default function TimeSlotResultPage() {
   const { roomCode } = useParams<{ roomCode: string }>();
   const navigate = useNavigate();
 
+  const cardRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<ScheduleData | null>(null);
 
@@ -25,16 +27,53 @@ export default function TimeSlotResultPage() {
       .finally(() => setLoading(false));
   }, [roomCode]);
 
-  const handleShare = () => {
+  const handleShare = async () => {
     const nickname = localStorage.getItem("nickname");
     const savedRoomCode = localStorage.getItem("roomCode");
     if (!nickname || savedRoomCode !== roomCode) {
       navigate(`/card/${roomCode}/join`);
       return;
     }
-    const link = `${window.location.origin}/card/${roomCode}/timeslot`;
-    navigator.clipboard.writeText(link);
-    alert("링크가 복사됐어요!");
+
+    const shareUrl = `${window.location.origin}/card/${roomCode}/timeslot`;
+
+    if (!cardRef.current) {
+      await navigator.clipboard.writeText(shareUrl);
+      alert("링크가 복사됐어요!");
+      return;
+    }
+
+    try {
+      const dataUrl = await toPng(cardRef.current, { pixelRatio: 2 });
+      const blob = await (await fetch(dataUrl)).blob();
+      const file = new File([blob], "realboja-timeslot.png", { type: "image/png" });
+
+      await navigator.clipboard.writeText(shareUrl);
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "진짜보자 일정 결과",
+            text: "시간대와 장소 후보가 모였어요 🔥",
+            url: shareUrl,
+            files: [file],
+          });
+        } catch {
+          await navigator.share({ title: "진짜보자 일정 결과", url: shareUrl });
+        }
+      } else {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "realboja-timeslot.png";
+        a.click();
+        await navigator.clipboard.writeText(shareUrl);
+        alert("카드 이미지를 저장했어요! 링크도 복사됐어요 😊");
+      }
+    } catch (e) {
+      console.error(e);
+      await navigator.clipboard.writeText(shareUrl);
+      alert("링크가 복사됐어요!");
+    }
   };
 
   const topCount = data?.topTimeSlot?.count ?? 0;
@@ -69,7 +108,7 @@ export default function TimeSlotResultPage() {
           </div>
 
           {/* 메인 결과 카드 */}
-          <div
+          <div ref={cardRef}
             className="flex flex-col gap-2.5 p-4 rounded-3xl bg-cardWeak border-[0.8px] border-border-point"
             style={{ boxShadow: "0px 4px 20px 0 rgba(36,21,14,0.08)" }}
           >

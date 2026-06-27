@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toPng } from "html-to-image";
 import MobileLayout from "@/components/layout/MobileLayout";
 import TopBar from "@/components/common/TopBar";
 import PromiseCard from "@/components/common/PromiseCard";
@@ -20,6 +21,7 @@ export default function CardResultPage() {
   const navigate = useNavigate();
   const { roomCode } = useParams<{ roomCode: string }>();
 
+  const cardRef = useRef<HTMLDivElement>(null);
   const [badge, setBadge] = useState("");
   const [body, setBody] = useState("");
   const [ctaText, setCtaText] = useState("");
@@ -52,10 +54,46 @@ export default function CardResultPage() {
       });
   }, [roomCode]);
 
-  const handleShare = () => {
-    const link = `${window.location.origin}/${roomCode}/card-result`;
-    navigator.clipboard.writeText(link);
-    alert("링크가 복사됐어요!");
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/${roomCode}/card-result`;
+
+    if (!cardRef.current) {
+      await navigator.clipboard.writeText(shareUrl);
+      alert("링크가 복사됐어요!");
+      return;
+    }
+
+    try {
+      const dataUrl = await toPng(cardRef.current, { pixelRatio: 2 });
+      const blob = await (await fetch(dataUrl)).blob();
+      const file = new File([blob], "realboja-card.png", { type: "image/png" });
+
+      await navigator.clipboard.writeText(shareUrl);
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "진짜보자 약속카드",
+            text: "약속 카드가 도착했어요! 반응 남겨줘요 👇",
+            url: shareUrl,
+            files: [file],
+          });
+        } catch {
+          await navigator.share({ title: "진짜보자 약속카드", url: shareUrl });
+        }
+      } else {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "realboja-card.png";
+        a.click();
+        await navigator.clipboard.writeText(shareUrl);
+        alert("카드 이미지를 저장했어요! 링크도 복사됐어요 😊");
+      }
+    } catch (e) {
+      console.error(e);
+      await navigator.clipboard.writeText(shareUrl);
+      alert("링크가 복사됐어요!");
+    }
   };
 
   const handleJoinPage = () => {
@@ -84,7 +122,7 @@ export default function CardResultPage() {
         카드를 단톡방에 공유하면 친구들이 가볍게 반응할 수 있어요.
       </p>
 
-      <div className="flex min-h-[60vh] items-center">
+      <div ref={cardRef} className="flex min-h-[60vh] items-center">
         <PromiseCard
           cardLabel="진짜보자 약속카드"
           roomLabel={roomLabel}
