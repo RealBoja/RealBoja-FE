@@ -41,7 +41,7 @@ export default function SecondCardPage() {
     try {
       setLoading(true);
       await submitSchedule(roomCode, nickname, station, selected);
-      navigate(`/${roomCode}/timeslot`);
+      navigate(`/card/${roomCode}/timeslot`); // ← 여기 수정
     } catch (e) {
       console.error(e);
       alert("시간대 남기기에 실패했어요. 다시 시도해주세요.");
