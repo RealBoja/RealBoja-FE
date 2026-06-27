@@ -12,6 +12,16 @@ const ROOM_TYPE_MAP: Record<string, string> = {
   기타: "OTHER",
 };
 
+export const ROOM_TYPE_LABEL: Record<string, string> = {
+  HIGH_SCHOOL: "고등학교 친구방",
+  UNIVERSITY: "대학교 동기방",
+  CLUB: "동아리/모임방",
+  EX_COWORKER: "전 직장 동료방",
+  PROJECT_TEAM: "프로젝트 끝난 팀방",
+  FAMILY: "가족/친척방",
+  OTHER: "기타",
+};
+
 const LAST_MEETING_MAP: Record<string, string> = {
   "1달전": "ONE_MONTH",
   반년전: "HALF_YEAR",
@@ -24,6 +34,13 @@ const PURPOSE_MAP: Record<string, string> = {
   카페: "CAFE",
   술: "DRINK",
   "그냥 얼굴 보기": "JUST_SEE",
+};
+
+export const PURPOSE_LABEL: Record<string, string> = {
+  MEAL: "밥",
+  CAFE: "카페",
+  DRINK: "술",
+  JUST_SEE: "그냥 얼굴 보기",
 };
 
 const TONE_MAP: Record<string, string> = {
