@@ -8,7 +8,6 @@
     "skipLibCheck": true,
 
     /* Path Alias */
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
