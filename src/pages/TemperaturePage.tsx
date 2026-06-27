@@ -7,10 +7,15 @@ import TempLegend from "../components/temperature/TempLegend";
 import { Users } from "../components/common/icons";
 
 const REACTIONS = [
-  { emoji: "🔥", label: "나 진짜 볼래", count: 1 },
-  { emoji: "🍚", label: "밥이면 감", count: 2 },
-  { emoji: "🙋", label: "누가 잡으면 감", count: 2 },
-  { emoji: "👀", label: "일단 생존신고", count: 0 },
+  { emoji: "🔥", label: "나 진짜 볼래", count: 2, names: ["수현", "민지"] },
+  {
+    emoji: "🍚",
+    label: "밥이면 감",
+    count: 3,
+    names: ["지훈", "예린", "동현"],
+  },
+  { emoji: "🙋", label: "누가 잡으면 감", count: 2, names: ["서연", "준호"] },
+  { emoji: "👀", label: "일단 생존신고", count: 0, names: [] },
 ];
 
 // 공개 기준 인원수 - 아직 미정이라 여기서 관리, 추후 기획 확정되면 이 값만 수정
@@ -30,7 +35,6 @@ export default function TemperaturePage({
   onMoreReactionClick,
 }: TemperaturePageProps) {
   const isUnlocked = respondedCount >= UNLOCK_THRESHOLD;
-  const maxCount = Math.max(...REACTIONS.map((r) => r.count), 1);
 
   return (
     <MobileLayout
@@ -89,7 +93,7 @@ export default function TemperaturePage({
                 emoji={r.emoji}
                 label={r.label}
                 count={r.count}
-                maxCount={maxCount}
+                names={r.names}
               />
             ))}
           </div>
