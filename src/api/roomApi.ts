@@ -1,7 +1,7 @@
 // src/api/roomApi.ts
 import axios from "axios";
 
-const BASE_URL = "http://10.210.97.99:8080";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const ROOM_TYPE_MAP: Record<string, string> = {
   "고등학교 친구방": "HIGH_SCHOOL",
