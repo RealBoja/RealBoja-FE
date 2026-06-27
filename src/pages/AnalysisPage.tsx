@@ -67,7 +67,7 @@ export default function AnalysisPage({
                     : "bg-bg border-border text-muted/40 cursor-not-allowed"
                 }`}
             >
-              다음 카드 만들기
+              일정 조율하기
             </button>
           </div>
         </div>
