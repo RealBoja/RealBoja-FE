@@ -60,6 +60,39 @@ interface CreateCardResponse {
   message: string;
 }
 
+interface RoomResponse {
+  success: boolean;
+  data: {
+    roomId: number;
+    roomCode: string;
+    roomType: string;
+    lastMeeting: string;
+    roomSize: number;
+    purpose: string;
+    tone: string;
+    currentStep: string;
+    createdAt: string;
+  };
+  message: string;
+}
+
+interface AnalysisResponse {
+  success: boolean;
+  data: {
+    temperature: number;
+    statusType: string;
+    statusLabel: string;
+    participantCount: number;
+    roomSize: number;
+    participationRate: number;
+    reactionSummary: Record<string, number>;
+    reactionParticipants: Record<string, string[]>;
+    summary: string;
+    nextAction: string;
+  };
+  message: string;
+}
+
 export async function createRoom(params: {
   roomType: string;
   lastMet: string;
@@ -85,6 +118,27 @@ export async function createRoom(params: {
 export async function createCard(roomCode: string) {
   const { data } = await axios.post<CreateCardResponse>(
     `${BASE_URL}/api/rooms/${roomCode}/card`,
+  );
+  return data;
+}
+
+export async function getRoom(roomCode: string) {
+  const { data } = await axios.get<RoomResponse>(
+    `${BASE_URL}/api/rooms/${roomCode}`,
+  );
+  return data;
+}
+
+export async function getCard(roomCode: string) {
+  const { data } = await axios.get<CreateCardResponse>(
+    `${BASE_URL}/api/rooms/${roomCode}/card`,
+  );
+  return data;
+}
+
+export async function getAnalysis(roomCode: string) {
+  const { data } = await axios.get<AnalysisResponse>(
+    `${BASE_URL}/api/rooms/${roomCode}/analysis`,
   );
   return data;
 }
