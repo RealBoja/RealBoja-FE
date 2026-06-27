@@ -58,6 +58,16 @@ export const REACTION_ID_TO_TYPE: Record<string, string> = {
   eyes: "JUST_ALIVE",
 };
 
+// Frame10 시간대 한글 ↔ enum 매핑
+export const TIME_SLOT_MAP: Record<string, string> = {
+  "평일 점심": "WEEKDAY_LUNCH",
+  "평일 저녁": "WEEKDAY_DINNER",
+  "토요일 점심": "SATURDAY_LUNCH",
+  "토요일 저녁": "SATURDAY_DINNER",
+  "일요일 점심": "SUNDAY_LUNCH",
+  "일요일 저녁": "SUNDAY_DINNER",
+};
+
 // ── 인터페이스 ──────────────────────────────────────
 
 interface CreateRoomRequest {
@@ -127,6 +137,18 @@ export interface RoomDetailResponse {
     createdAt: string;
   };
   message: string;
+}
+
+interface SubmitScheduleRequest {
+  nickname: string;
+  location: string;
+  timeSlots: string[];
+}
+
+interface SubmitScheduleResponse {
+  success: boolean;
+  data: unknown;
+  message: string | null;
 }
 
 // ── API 함수 ──────────────────────────────────────
@@ -200,7 +222,26 @@ export async function createReaction(
 
 export async function advanceRoom(roomCode: string) {
   const { data } = await axios.post<CreateCardResponse>(
-      `${BASE_URL}/api/rooms/${roomCode}/advance`,
+    `${BASE_URL}/api/rooms/${roomCode}/advance`,
+  );
+  return data;
+}
+
+export async function submitSchedule(
+  roomCode: string,
+  nickname: string,
+  location: string,
+  timeSlotLabels: string[],
+) {
+  const payload: SubmitScheduleRequest = {
+    nickname,
+    location,
+    timeSlots: timeSlotLabels.map((label) => TIME_SLOT_MAP[label]),
+  };
+
+  const { data } = await axios.post<SubmitScheduleResponse>(
+    `${BASE_URL}/api/rooms/${roomCode}/schedule`,
+    payload,
   );
   return data;
 }
