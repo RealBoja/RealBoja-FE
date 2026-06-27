@@ -1,5 +1,5 @@
-import MobileLayout from "../layout/MobileLayout";
-import Button from "../common/Button";
+import MobileLayout from "../components/layout/MobileLayout";
+import Button from "../components/common/Button";
 
 const steps = [
   {
