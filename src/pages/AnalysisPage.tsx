@@ -1,184 +1,203 @@
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import MobileLayout from "../components/layout/MobileLayout";
 import TopBar from "../components/common/TopBar";
 import ShareButton from "../components/common/ShareButton";
 import AnalysisSummaryCard from "../components/analysis/AnalysisSummaryCard";
 import RecommendActionBox from "../components/analysis/RecommendActionBox";
-import { getAnalysis, advanceRoom, type AnalysisResponse } from "../api/roomApi";
+import { getAnalysis, type ReactionType } from "@/api/analysisApi";
+import { getRoomDetail } from "@/api/roomApi";
 
-type AnalysisData = AnalysisResponse["data"];
-
-// 반응 타입별 이모지 + 라벨
-type ReactionType =
-    | "REALLY_MEET"
-    | "PURPOSE_OK"
-    | "IF_SOMEONE_LEADS"
-    | "JUST_ALIVE";
-
-const REACTION_EMOJI: Record<ReactionType, string> = {
-  REALLY_MEET: "🔥",
-  PURPOSE_OK: "🍚",
-  IF_SOMEONE_LEADS: "🙋",
-  JUST_ALIVE: "👀",
+const REACTION_LABEL: Record<ReactionType, { emoji: string; label: string }> = {
+  REALLY_MEET: { emoji: "🔥", label: "나 진짜 볼래" },
+  PURPOSE_OK: { emoji: "🍚", label: "밥이면 감" },
+  IF_SOMEONE_LEADS: { emoji: "🙋", label: "누가 잡으면 감" },
+  JUST_ALIVE: { emoji: "👀", label: "일단 생존신고" },
 };
 
-const REACTION_LABEL: Record<ReactionType, string> = {
-  REALLY_MEET: "나 진짜 볼래",
-  PURPOSE_OK: "목적이면 감",
-  IF_SOMEONE_LEADS: "누가 잡으면 감",
-  JUST_ALIVE: "일단 생존신고",
+const STAGE_LABELS = [
+  "냉동방",
+  "해동중",
+  "온기 도는 중",
+  "조율 가능",
+  "진짜 볼 각",
+];
+
+const STATUS_TO_STAGE: Record<string, string> = {
+  COLD_ROOM: "냉동방",
+  THAWING: "해동중",
+  WARMING: "온기 도는 중",
+  SCHEDULABLE: "조율 가능",
+  READY: "진짜 볼 각",
 };
 
-const REACTION_ORDER: ReactionType[] = [
-  "REALLY_MEET",
-  "PURPOSE_OK",
-  "IF_SOMEONE_LEADS",
-  "JUST_ALIVE",
-];
+type Reaction = {
+  emoji: string;
+  label: string;
+  count: number;
+  ratio: number;
+};
 
-// stages는 아직 하드코딩 (다음 단계에서 statusType 매핑)
-const stages = [
-  { label: "냉동방", active: false },
-  { label: "해동중", active: false },
-  { label: "온기 도는 중", active: false },
-  { label: "조율 가능", active: true },
-  { label: "진짜 볼 각", active: false },
-];
+type Stage = {
+  label: string;
+  active: boolean;
+};
 
 export default function AnalysisPage() {
   const { roomCode } = useParams<{ roomCode: string }>();
   const navigate = useNavigate();
 
-  const [analysis, setAnalysis] = useState<AnalysisData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [advancing, setAdvancing] = useState(false);
+  const [date, setDate] = useState("");
+  const [roomTypeLabel, setRoomTypeLabel] = useState("");
+  const [temp, setTemp] = useState(0);
+  const [participantCount, setParticipantCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [reactions, setReactions] = useState<Reaction[]>([]);
+  const [insightText, setInsightText] = useState("");
+  const [currentStageLabel, setCurrentStageLabel] = useState("");
+  const [nextGoal, setNextGoal] = useState("");
+  const [stages, setStages] = useState<Stage[]>(
+    STAGE_LABELS.map((label) => ({ label, active: false })),
+  );
 
   useEffect(() => {
     if (!roomCode) return;
-    let alive = true;
-    setLoading(true);
-    setError(null);
 
-    getAnalysis(roomCode)
-        .then((res) => {
-          if (alive) setAnalysis(res.data);
-        })
-        .catch(() => {
-          if (alive) setError("분석 정보를 불러오지 못했어요.");
-        })
-        .finally(() => {
-          if (alive) setLoading(false);
-        });
+    const fetchAll = async () => {
+      try {
+        const [analysisData, roomRes] = await Promise.all([
+          getAnalysis(roomCode),
+          getRoomDetail(roomCode),
+        ]);
 
-    return () => {
-      alive = false;
+        if (roomRes.success) {
+          const d = new Date(roomRes.data.createdAt);
+          setDate(
+            `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`,
+          );
+        }
+
+        setRoomTypeLabel(analysisData.statusLabel);
+        setTemp(analysisData.temperature);
+        setParticipantCount(analysisData.participantCount);
+        setTotalCount(analysisData.roomSize);
+
+        const maxCount = Math.max(
+          ...Object.values(analysisData.reactionSummary),
+        );
+        const reactionList = (
+          Object.entries(analysisData.reactionSummary) as [
+            ReactionType,
+            number,
+          ][]
+        )
+          .map(([type, count]) => ({
+            emoji: REACTION_LABEL[type]?.emoji ?? "❓",
+            label: REACTION_LABEL[type]?.label ?? type,
+            count,
+            ratio: maxCount > 0 ? count / maxCount : 0,
+          }))
+          .sort((a, b) => b.count - a.count);
+        setReactions(reactionList);
+
+        setInsightText(analysisData.summary);
+
+        const stageLabel =
+          STATUS_TO_STAGE[analysisData.statusType] ?? analysisData.statusType;
+        setCurrentStageLabel(stageLabel);
+        setNextGoal(analysisData.nextAction);
+        setStages(
+          STAGE_LABELS.map((label) => ({
+            label,
+            active: label === stageLabel,
+          })),
+        );
+      } catch (err) {
+        console.error("데이터 로딩 실패:", err);
+      } finally {
+        setLoading(false);
+      }
     };
+
+    fetchAll();
   }, [roomCode]);
 
-  // 일정 조율 단계로 전환 → NextCardPage 이동
-  const handleAdvance = async () => {
-    if (!roomCode || advancing) return;
-    setAdvancing(true);
-    try {
-      await advanceRoom(roomCode);
-      navigate(`/${roomCode}/next`);
-    } catch {
-      alert("일정 조율 단계로 넘어가지 못했어요. 다시 시도해 주세요.");
-      setAdvancing(false);
-    }
-  };
-
-  // ── 로딩 ──
-  if (loading) {
-    return (
-        <MobileLayout topBar={<TopBar showBack />}>
-          <div className="flex h-full items-center justify-center py-20">
-            <p className="text-sm text-muted">불러오는 중…</p>
-          </div>
-        </MobileLayout>
-    );
-  }
-
-  // ── 에러 ──
-  if (error || !analysis) {
-    return (
-        <MobileLayout topBar={<TopBar showBack />}>
-          <div className="flex flex-col items-center justify-center gap-3 py-20">
-            <p className="text-sm text-muted">{error ?? "데이터가 없어요."}</p>
-          </div>
-        </MobileLayout>
-    );
-  }
-
-  // ── 정상 데이터 ──
-  const participantCount = analysis.participantCount;
-  const totalCount = analysis.roomSize;
   const isMajority = participantCount > totalCount / 2;
 
-  // 반응 요약 → AnalysisSummaryCard용 배열 (ratio = count / 최대count)
-  const counts = REACTION_ORDER.map(
-      (type) => analysis.reactionSummary[type] ?? 0,
-  );
-  const maxCount = Math.max(...counts, 1); // 0 나누기 방지
+  const handleBack = () => navigate(-1);
+  const handleShare = () => {
+    // TODO: 링크 복사
+  };
+  const handleMoreReaction = () => {
+    // TODO: 한번 더 알리기
+  };
+  const handleNextCard = () => {
+    navigate(`/card/${roomCode}/next`);
+  };
 
-  const reactions = REACTION_ORDER.map((type) => {
-    const count = analysis.reactionSummary[type] ?? 0;
-    return {
-      emoji: REACTION_EMOJI[type],
-      label: REACTION_LABEL[type],
-      count,
-      ratio: count / maxCount,
-    };
-  });
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-bg">
+        <p className="text-sm text-muted">불러오는 중...</p>
+      </div>
+    );
+  }
 
   return (
-      <MobileLayout
-          topBar={<TopBar showBack />}
-          bottomCTA={
-            <div className="flex flex-col gap-2">
-              <ShareButton onClick={() => {}}>결과 카드 공유하기</ShareButton>
-              <div className="flex gap-2">
-                <button
-                    onClick={() => {}}
-                    className="flex-1 py-3.5 rounded-2xl border-[0.8px] text-sm font-medium transition"
-                >
-                  한번 더 알리기
-                </button>
-                <button
-                    onClick={handleAdvance}
-                    disabled={!isMajority || advancing}
-                    className={`flex-1 py-3.5 rounded-2xl border-[0.8px] text-sm font-medium transition
+    <MobileLayout
+      topBar={<TopBar showBack onBack={handleBack} />}
+      bottomCTA={
+        <div className="flex flex-col gap-2">
+          <ShareButton onClick={handleShare}>결과 카드 공유하기</ShareButton>
+          <div className="flex gap-2">
+            <button
+              onClick={handleMoreReaction}
+              className="flex-1 py-3.5 rounded-2xl border-[0.8px] border-orange bg-orange text-sm font-medium text-white transition hover:bg-orange-dark"
+            >
+              한번 더 알리기
+            </button>
+            <button
+              onClick={handleNextCard}
+              disabled={!isMajority}
+              className={`flex-1 py-3.5 rounded-2xl border-[0.8px] text-sm font-medium transition
                 ${
-                        isMajority
-                            ? "bg-bg border-border text-muted hover:bg-section"
-                            : "bg-bg border-border text-muted/40 cursor-not-allowed"
-                    }`}
-                >
-                  {advancing ? "이동 중…" : "일정 조율하기"}
-                </button>
-              </div>
-            </div>
-          }
-      >
-        {/* 페이지 제목 */}
-        <div className="pb-4">
-          <p className="text-xl font-bold text-text">방 분석 결과 카드</p>
-          <p className="pt-1 text-sm text-muted">
-            카드가 방 상태를 대신 말해줘요.
-          </p>
+                  isMajority
+                    ? "bg-orange border-orange text-white hover:bg-orange-dark"
+                    : "bg-[#eedccb] border-[#eedccb] text-muted cursor-not-allowed"
+                }`}
+            >
+              일정 조율하기
+            </button>
+          </div>
         </div>
+      }
+    >
+      {/* 페이지 제목 */}
+      <div className="pb-4">
+        <p className="text-xl font-bold text-text">방 분석 결과 카드</p>
+        <p className="pt-1 text-sm text-muted">
+          카드가 방 상태를 대신 말해줘요.
+        </p>
+      </div>
 
-        {/* 결과 요약 카드 */}
-        <AnalysisSummaryCard
-            date={new Date().toLocaleDateString("ko-KR")}
-            roomTypeLabel={analysis.statusLabel}
-            temp={analysis.temperature}
-            participantCount={participantCount}
-            totalCount={totalCount}
-            reactions={reactions}
-            insightText={analysis.summary}
+      {/* 결과 요약 카드 */}
+      <AnalysisSummaryCard
+        date={date}
+        roomTypeLabel={roomTypeLabel}
+        temp={temp}
+        participantCount={participantCount}
+        totalCount={totalCount}
+        reactions={reactions}
+        insightText={insightText}
+      />
+
+      {/* 약속 진행 단계 */}
+      <div className="mt-4">
+        <RecommendActionBox
+          stages={stages}
+          currentStageLabel={currentStageLabel}
+          nextGoal={nextGoal}
         />
 
         {/* 약속 진행 단계 */}
