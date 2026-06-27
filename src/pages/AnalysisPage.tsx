@@ -6,7 +6,7 @@ import ShareButton from "../components/common/ShareButton";
 import AnalysisSummaryCard from "../components/analysis/AnalysisSummaryCard";
 import RecommendActionBox from "../components/analysis/RecommendActionBox";
 import { getAnalysis, type ReactionType } from "@/api/analysisApi";
-import { getRoomDetail } from "@/api/roomApi";
+import { getRoomDetail, advanceRoom } from "@/api/roomApi";
 
 const REACTION_LABEL: Record<ReactionType, { emoji: string; label: string }> = {
   REALLY_MEET: { emoji: "🔥", label: "나 진짜 볼래" },
@@ -126,14 +126,24 @@ export default function AnalysisPage() {
   const isMajority = participantCount > totalCount / 2;
 
   const handleBack = () => navigate(-1);
+
   const handleShare = () => {
     // TODO: 링크 복사
   };
+
   const handleMoreReaction = () => {
     // TODO: 한번 더 알리기
   };
-  const handleNextCard = () => {
-    navigate(`/card/${roomCode}/next`);
+
+  const handleNextCard = async () => {
+    if (!roomCode) return;
+    try {
+      await advanceRoom(roomCode);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      navigate(`/card/${roomCode}/next`);
+    }
   };
 
   if (loading) {

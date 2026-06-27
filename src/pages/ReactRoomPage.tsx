@@ -1,4 +1,3 @@
-// src/pages/ReactRoomPage.tsx
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import MobileLayout from "@/components/layout/MobileLayout";
@@ -9,13 +8,15 @@ import ReactionCardPreview from "@/components/reaction/ReactionCardPreview";
 import {
   createReaction,
   getRoomDetail,
+  getCard,
   PURPOSE_LABEL_MAP,
   REACTION_ID_TO_TYPE,
 } from "@/api/roomApi";
+import { getAnalysis } from "@/api/analysisApi";
 
 export default function ReactRoomPage() {
   const navigate = useNavigate();
-  const { roomId: roomCode } = useParams<{ roomId: string }>();
+  const { roomCode } = useParams<{ roomCode: string }>();
 
   const participantId = Number(localStorage.getItem("participantId"));
   const nickname = localStorage.getItem("nickname") ?? "익명";
@@ -23,25 +24,37 @@ export default function ReactRoomPage() {
   const [reactionId, setReactionId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [purposeLabel, setPurposeLabel] = useState("밥");
+  const [temp, setTemp] = useState(0);
+  const [reactionCount, setReactionCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [cardTitle, setCardTitle] = useState("");
+  const [cardBody, setCardBody] = useState("");
 
   useEffect(() => {
     if (!roomCode) return;
 
     if (!localStorage.getItem("participantId")) {
       alert("입장 정보가 없어요. 다시 입장해주세요.");
-      navigate(`/${roomCode}/join`);
+      navigate(`/card/${roomCode}/join`);
       return;
     }
 
-    getRoomDetail(roomCode)
-      .then((res) => {
-        const { purpose } = res.data;
+    Promise.all([
+      getRoomDetail(roomCode),
+      getAnalysis(roomCode),
+      getCard(roomCode),
+    ])
+      .then(([roomRes, analysisData, cardRes]) => {
+        const { purpose, roomSize } = roomRes.data;
         setPurposeLabel(PURPOSE_LABEL_MAP[purpose] ?? "밥");
+        setTotalCount(roomSize);
+        setTemp(analysisData.temperature);
+        setReactionCount(analysisData.participantCount);
+        setCardTitle(cardRes.data.title);
+        setCardBody(cardRes.data.body);
       })
-      .catch((e) => {
-        console.error(e);
-      });
-  }, [roomCode]);
+      .catch((e) => console.error(e));
+  }, [roomCode, navigate]);
 
   const handleSubmit = async () => {
     if (!reactionId || !roomCode) return;
@@ -49,7 +62,7 @@ export default function ReactRoomPage() {
       setLoading(true);
       const reactionType = REACTION_ID_TO_TYPE[reactionId];
       await createReaction(roomCode, participantId, reactionType);
-      navigate(`/${roomCode}/analysis`);
+      navigate(`/card/${roomCode}/analysis`);
     } catch (e) {
       console.error(e);
       alert("반응 남기기에 실패했어요. 다시 시도해주세요.");
@@ -60,7 +73,7 @@ export default function ReactRoomPage() {
 
   const handleViewStatus = () => {
     if (!roomCode) return;
-    navigate(`/${roomCode}/analysis?locked=true`);
+    navigate(`/card/${roomCode}/temperature`);
   };
 
   return (
@@ -98,14 +111,14 @@ export default function ReactRoomPage() {
         <ParticipantStatusCard
           nickname={nickname}
           roomMeta={`고등학교 친구방 · ${purposeLabel}`}
-          temp={18}
-          reactionCount={3}
-          totalCount={8}
+          temp={temp}
+          reactionCount={reactionCount}
+          totalCount={totalCount}
         />
 
         <ReactionCardPreview
-          title="'나중에 보자'만 반복 중"
-          description="생존자 3명부터 약속 해동 시작"
+          title={cardTitle || "'나중에 보자'만 반복 중"}
+          description={cardBody || "생존자 3명부터 약속 해동 시작"}
         />
 
         <div className="flex items-center gap-2">

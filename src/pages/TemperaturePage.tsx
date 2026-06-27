@@ -119,17 +119,18 @@ export default function TemperaturePage() {
     <MobileLayout
       topBar={<TopBar />}
       bottomCTA={
+        // 기존 코드에서 navigate 부분만 수정
         isUnlocked ? (
           <Button
             variant="primary"
-            onClick={() => navigate(`/${roomCode}/analysis`)}
+            onClick={() => navigate(`/card/${roomCode}/analysis`)}
           >
             결과 카드 보기
           </Button>
         ) : (
           <Button
             variant="ghost"
-            onClick={() => navigate(`/${roomCode}/react`)}
+            onClick={() => navigate(`/card/${roomCode}/react`)}
           >
             반응 남기기
           </Button>

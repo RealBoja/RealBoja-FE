@@ -18,7 +18,7 @@ const ROOM_TYPE_LABEL_MAP: Record<string, string> = {
 
 export default function CardResultPage() {
   const navigate = useNavigate();
-  const { roomId: roomCode } = useParams<{ roomId: string }>();
+  const { roomCode } = useParams<{ roomCode: string }>();
 
   const [badge, setBadge] = useState("");
   const [body, setBody] = useState("");
@@ -34,7 +34,7 @@ export default function CardResultPage() {
       .then(([cardRes, roomRes]) => {
         const { title, body, ctaText } = cardRes.data;
         setBadge(title);
-        setBody(body.replace(/\\n/g, "\n")); // 혹시 \\n으로 이중 escape되어 오면 처리
+        setBody(body.replace(/\\n/g, "\n"));
         setCtaText(ctaText);
 
         const { roomType, purpose, roomSize, tone } = roomRes.data;
@@ -52,12 +52,18 @@ export default function CardResultPage() {
       });
   }, [roomCode]);
 
+  const handleShare = () => {
+    const link = `${window.location.origin}/card/${roomCode}/join`;
+    navigator.clipboard.writeText(link);
+    alert("링크가 복사됐어요!");
+  };
+
   return (
     <MobileLayout
-      topBar={<TopBar showBack onBack={() => history.back()} />}
+      topBar={<TopBar showBack onBack={() => navigate(-1)} />}
       bottomCTA={
         <div className="flex flex-col gap-3">
-          <ShareButton onClick={() => {}}>카드 공유하기</ShareButton>
+          <ShareButton onClick={handleShare}>카드 공유하기</ShareButton>
           <button
             onClick={() => navigate("/create")}
             className="w-full rounded-2xl border-[0.8px] border-border bg-bg py-3 text-sm font-medium leading-5 text-muted transition hover:bg-section active:bg-cardWeak"
