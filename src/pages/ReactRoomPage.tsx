@@ -19,7 +19,7 @@ export default function ReactRoomPage() {
   const { roomCode } = useParams<{ roomCode: string }>();
 
   const participantId = Number(localStorage.getItem("participantId"));
-  const nickname = localStorage.getItem("nickname") ?? "익명";
+  const nickname = localStorage.getItem("nickname") ?? "";
 
   const [reactionId, setReactionId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -33,8 +33,7 @@ export default function ReactRoomPage() {
   useEffect(() => {
     if (!roomCode) return;
 
-    if (!localStorage.getItem("participantId")) {
-      alert("입장 정보가 없어요. 다시 입장해주세요.");
+    if (!localStorage.getItem("nickname") || localStorage.getItem("roomCode") !== roomCode) {
       navigate(`/card/${roomCode}/join`);
       return;
     }
@@ -94,7 +93,7 @@ export default function ReactRoomPage() {
               ${
                 reactionId
                   ? "bg-orange text-white"
-                  : "bg-[#eedccb] text-muted cursor-not-allowed"
+                  : "bg-border text-muted cursor-not-allowed"
               }`}
             style={
               reactionId
@@ -106,7 +105,7 @@ export default function ReactRoomPage() {
           </button>
           <button
             onClick={handleViewStatus}
-            className="w-full h-[45.6px] rounded-2xl border-[0.8px] border-[#eedccb] text-sm font-medium text-muted hover:bg-section transition"
+            className="w-full h-[45.6px] rounded-2xl border-[0.8px] border-border text-sm font-medium text-muted hover:bg-section transition"
           >
             현재 상태 확인하기
           </button>
@@ -128,9 +127,9 @@ export default function ReactRoomPage() {
         />
 
         <div className="flex items-center gap-2">
-          <div className="flex-1 h-px bg-[#eedccb]" />
+          <div className="flex-1 h-px bg-border" />
           <p className="px-2 text-xs font-bold text-text">나는 이 방에서…</p>
-          <div className="flex-1 h-px bg-[#eedccb]" />
+          <div className="flex-1 h-px bg-border" />
         </div>
 
         <ReactionGrid purposeLabel={purposeLabel} onSelect={setReactionId} />

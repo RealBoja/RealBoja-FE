@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import html2canvas from "html2canvas";
 import MobileLayout from "../components/layout/MobileLayout";
 import TopBar from "../components/common/TopBar";
 import ShareButton from "../components/common/ShareButton";
@@ -47,6 +48,7 @@ export default function AnalysisPage() {
   const { roomCode } = useParams<{ roomCode: string }>();
   const navigate = useNavigate();
 
+  const cardRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [date, setDate] = useState("");
   const [roomTypeLabel, setRoomTypeLabel] = useState("");
@@ -64,6 +66,13 @@ export default function AnalysisPage() {
   useEffect(() => {
     if (!roomCode) return;
 
+    const nickname = localStorage.getItem("nickname");
+    const savedRoomCode = localStorage.getItem("roomCode");
+    if (!nickname || savedRoomCode !== roomCode) {
+      navigate(`/card/${roomCode}/join`);
+      return;
+    }
+
     const fetchAll = async () => {
       try {
         const [analysisData, roomRes] = await Promise.all([
@@ -78,7 +87,7 @@ export default function AnalysisPage() {
           );
         }
 
-        setRoomTypeLabel(analysisData.statusLabel);
+        setRoomTypeLabel(tempToStage(analysisData.temperature));
         setTemp(analysisData.temperature);
         setParticipantCount(analysisData.participantCount);
         setTotalCount(analysisData.roomSize);
@@ -138,7 +147,52 @@ export default function AnalysisPage() {
     }
   };
 
-  const handleShare = () => copyLink(`/card/${roomCode}/analysis`);
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/card/${roomCode}/analysis`;
+
+    if (!cardRef.current) {
+      await navigator.clipboard.writeText(shareUrl);
+      alert("링크가 복사되었어요!");
+      return;
+    }
+
+    try {
+      const canvas = await html2canvas(cardRef.current, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true,
+      });
+
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
+
+        if (navigator.share) {
+          const file = new File([blob], "realboja-result.png", { type: "image/png" });
+          try {
+            await navigator.share({
+              title: "진짜보자 방 분석 결과",
+              text: `우리 방 약속 온도는 ${temp}℃! 결과를 확인해봐요 👇`,
+              url: shareUrl,
+              files: [file],
+            });
+          } catch {
+            await navigator.share({ title: "진짜보자 방 분석 결과", url: shareUrl });
+          }
+        } else {
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "realboja-result.png";
+          a.click();
+          await navigator.clipboard.writeText(shareUrl);
+          alert("카드 이미지를 저장했어요! 링크도 복사됐어요 😊");
+        }
+      }, "image/png");
+    } catch (e) {
+      console.error(e);
+      await navigator.clipboard.writeText(shareUrl);
+      alert("링크가 복사되었어요!");
+    }
+  };
 
   const handleMoreReaction = () => copyLink(`/card/${roomCode}/react`);
 
@@ -181,7 +235,7 @@ export default function AnalysisPage() {
                 ${
                   isMajority
                     ? "bg-orange border-orange text-white hover:bg-orange-dark"
-                    : "bg-[#eedccb] border-[#eedccb] text-muted cursor-not-allowed"
+                    : "bg-border border-border text-muted cursor-not-allowed"
                 }`}
             >
               일정 조율하기
@@ -199,6 +253,7 @@ export default function AnalysisPage() {
       </div>
 
       {/* 결과 요약 카드 */}
+      <div ref={cardRef}>
       <AnalysisSummaryCard
         date={date}
         roomTypeLabel={roomTypeLabel}
@@ -208,6 +263,7 @@ export default function AnalysisPage() {
         reactions={reactions}
         insightText={insightText}
       />
+      </div>
 
       {/* 약속 진행 단계 */}
       <div className="mt-4">

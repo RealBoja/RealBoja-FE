@@ -26,9 +26,9 @@ export default function TimeSlotResultPage() {
   }, [roomCode]);
 
   const handleShare = () => {
-    const participantId = localStorage.getItem("participantId");
+    const nickname = localStorage.getItem("nickname");
     const savedRoomCode = localStorage.getItem("roomCode");
-    if (!participantId || savedRoomCode !== roomCode) {
+    if (!nickname || savedRoomCode !== roomCode) {
       navigate(`/card/${roomCode}/join`);
       return;
     }
