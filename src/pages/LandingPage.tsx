@@ -29,32 +29,6 @@ const steps = [
   },
 ];
 
-const ArrowIcon = ({ className }: { className?: string }) => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 14 14"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className={className}
-  >
-    <path
-      d="M2.91675 7H11.0834"
-      stroke="#E9782F"
-      strokeWidth="1.16667"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M7 2.91669L11.0833 7.00002L7 11.0834"
-      stroke="#E9782F"
-      strokeWidth="1.16667"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
 export default function LandingPage() {
   const navigate = useNavigate();
   const handleStart = () => {
@@ -69,7 +43,7 @@ export default function LandingPage() {
         </Button>
       }
     >
-      {/* 상단 섹션: px-6 pt-7 pb-4 */}
+      {/* 상단 섹션 */}
       <div className="px-6 pt-7 pb-4">
         {/* 뱃지 */}
         <div className="h-6 relative mb-0">
@@ -122,13 +96,12 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* 스텝 카드 섹션: px-5 pb-5 */}
+      {/* 스텝 카드 섹션 */}
       <div className="px-5 pb-5">
         {steps.map((step, i) => (
           <div key={step.num} className={i !== 0 ? "pt-3" : ""}>
-            <button
-              onClick={handleStart}
-              className="group flex items-center w-full gap-4 p-4 rounded-2xl bg-white border-[0.8px] border-[#eedccb] text-left cursor-pointer hover:border-[#f0be83] transition-all duration-200"
+            <div
+              className="flex items-center w-full gap-4 p-4 rounded-2xl bg-white border-[0.8px] border-[#eedccb]"
               style={{ boxShadow: "0px 2px 10px 0 rgba(233,120,47,0.08)" }}
             >
               {/* 아이콘 */}
@@ -150,10 +123,7 @@ export default function LandingPage() {
                   <p className="text-xs text-[#7b6658]">{step.desc}</p>
                 </div>
               </div>
-
-              {/* 화살표 - hover 시 오른쪽으로 바운스 */}
-              <ArrowIcon className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1.5" />
-            </button>
+            </div>
           </div>
         ))}
       </div>
