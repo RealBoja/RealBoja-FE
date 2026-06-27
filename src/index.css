@@ -22,9 +22,18 @@
   --color-temp-warm: #FBBF24;     /* 온기 도는 중 51-70℃ */
   --color-temp-hot: #E9782F;      /* 진짜 볼 각 71℃+ */
 
-  /* Font Families */
+/* Font Families */
   --font-sans: "Noto Sans KR", sans-serif;
   --font-brand: "Nunito", sans-serif;
+
+  /* Spacing Scale (기준: 4px) */
+  --spacing-1: 4px;   /* 아이콘 내부 간격 */
+  --spacing-2: 8px;   /* chip 내부 padding */
+  --spacing-3: 12px;  /* 카드 내부 소항목 gap */
+  --spacing-4: 16px;  /* 카드 패딩 */
+  --spacing-5: 20px;  /* 화면 좌우 패딩 (px-5) */
+  --spacing-6: 24px;  /* 섹션 상하 간격 */
+  --spacing-8: 32px;  /* 화면 하단 버튼 영역 */
 }
 
 /* Type Scale */
