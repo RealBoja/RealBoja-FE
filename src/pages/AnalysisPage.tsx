@@ -199,15 +199,7 @@ export default function AnalysisPage() {
           currentStageLabel={currentStageLabel}
           nextGoal={nextGoal}
         />
-
-        {/* 약속 진행 단계 */}
-        <div className="mt-4">
-          <RecommendActionBox
-              stages={stages}
-              currentStageLabel="조율 가능"
-              nextGoal={analysis.nextAction}
-          />
-        </div>
-      </MobileLayout>
+      </div>
+    </MobileLayout>
   );
 }
