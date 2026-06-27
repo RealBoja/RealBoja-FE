@@ -127,13 +127,21 @@ export default function AnalysisPage() {
 
   const handleBack = () => navigate(-1);
 
-  const handleShare = () => {
-    // TODO: 링크 복사
+  const copyLink = async (path: string) => {
+    if (!roomCode) return;
+    const shareUrl = `${window.location.origin}${path}`;
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      alert("링크가 복사되었어요!");
+    } catch (e) {
+      console.error(e);
+      alert("링크 복사에 실패했어요.");
+    }
   };
 
-  const handleMoreReaction = () => {
-    // TODO: 한번 더 알리기
-  };
+  const handleShare = () => copyLink(`/card/${roomCode}/analysis`);
+
+  const handleMoreReaction = () => copyLink(`/card/${roomCode}/react`);
 
   const handleNextCard = async () => {
     if (!roomCode) return;
