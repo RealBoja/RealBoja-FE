@@ -39,6 +39,11 @@ export default function ReactRoomPage() {
       return;
     }
 
+    if (localStorage.getItem(`reacted_${roomCode}`) === "true") {
+      navigate(`/card/${roomCode}/analysis`);
+      return;
+    }
+
     Promise.all([
       getRoomDetail(roomCode),
       getAnalysis(roomCode),
@@ -62,7 +67,8 @@ export default function ReactRoomPage() {
       setLoading(true);
       const reactionType = REACTION_ID_TO_TYPE[reactionId];
       await createReaction(roomCode, participantId, reactionType);
-      navigate(`/card/${roomCode}/analysis`);
+      localStorage.setItem(`reacted_${roomCode}`, "true");
+      navigate(`/card/${roomCode}/temperature`);
     } catch (e) {
       console.error(e);
       alert("반응 남기기에 실패했어요. 다시 시도해주세요.");

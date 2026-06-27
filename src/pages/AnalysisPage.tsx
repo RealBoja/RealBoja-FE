@@ -23,13 +23,13 @@ const STAGE_LABELS = [
   "진짜 볼 각",
 ];
 
-const STATUS_TO_STAGE: Record<string, string> = {
-  COLD_ROOM: "냉동방",
-  THAWING: "해동중",
-  WARMING: "온기 도는 중",
-  SCHEDULABLE: "조율 가능",
-  READY: "진짜 볼 각",
-};
+function tempToStage(temp: number): string {
+  if (temp <= 30) return "냉동방";
+  if (temp <= 50) return "해동중";
+  if (temp <= 70) return "온기 도는 중";
+  if (temp <= 85) return "조율 가능";
+  return "진짜 볼 각";
+}
 
 type Reaction = {
   emoji: string;
@@ -103,8 +103,7 @@ export default function AnalysisPage() {
 
         setInsightText(analysisData.summary);
 
-        const stageLabel =
-          STATUS_TO_STAGE[analysisData.statusType] ?? analysisData.statusType;
+        const stageLabel = tempToStage(analysisData.temperature);
         setCurrentStageLabel(stageLabel);
         setNextGoal(analysisData.nextAction);
         setStages(

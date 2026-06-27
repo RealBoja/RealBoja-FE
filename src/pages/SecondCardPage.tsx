@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import MobileLayout from "../components/layout/MobileLayout";
 import TopBar from "../components/common/TopBar";
 import Button from "../components/common/Button";
 import TextInput from "../components/common/TextInput";
-import { submitSchedule } from "../api/roomApi";
+import { submitSchedule, getRoomDetail } from "../api/roomApi";
+import { getSchedule } from "../api/analysisApi";
 
 const TIME_OPTIONS = [
   "평일 점심",
@@ -22,8 +23,20 @@ export default function SecondCardPage() {
   const [selected, setSelected] = useState<string[]>([]);
   const [station, setStation] = useState("");
   const [loading, setLoading] = useState(false);
+  const [participantCount, setParticipantCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
 
   const nickname = localStorage.getItem("nickname") ?? "익명";
+
+  useEffect(() => {
+    if (!roomCode) return;
+    Promise.all([getSchedule(roomCode), getRoomDetail(roomCode)])
+      .then(([scheduleData, roomRes]) => {
+        setParticipantCount(scheduleData.participantCount);
+        setTotalCount(roomRes.data.roomSize);
+      })
+      .catch(console.error);
+  }, [roomCode]);
 
   // 여러 개 선택/해제 토글
   const toggle = (opt: string) => {
@@ -87,10 +100,10 @@ export default function SecondCardPage() {
       {/* 참여 현황 박스 */}
       <div className="mt-3 flex items-center justify-between rounded-[14px] border-[0.8px] border-border bg-section px-4 py-2.5">
         <span className="text-xs font-bold text-text">
-          현재 3명이 의견을 남겼어요
+          현재 {participantCount}명이 의견을 남겼어요
         </span>
         <span className="rounded-full bg-orange px-2 py-0.5 text-[10px] font-bold text-white">
-          5명 중
+          {totalCount}명 중
         </span>
       </div>
 
