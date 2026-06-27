@@ -1,4 +1,3 @@
-// src/pages/AnalysisPage.tsx
 import MobileLayout from "../components/layout/MobileLayout";
 import TopBar from "../components/common/TopBar";
 import ShareButton from "../components/common/ShareButton";
@@ -19,6 +18,12 @@ const stages = [
   { label: "조율 가능", active: true },
   { label: "진짜 볼 각", active: false },
 ];
+
+const participantCount = 5;
+const totalCount = 8;
+
+// 과반수 여부: 반응한 사람이 전체 인원의 절반 초과
+const isMajority = participantCount > totalCount / 2;
 
 interface AnalysisPageProps {
   onBack?: () => void;
@@ -42,13 +47,25 @@ export default function AnalysisPage({
           <div className="flex gap-2">
             <button
               onClick={onMoreReaction}
-              className="flex-1 py-3.5 rounded-2xl bg-bg border-[0.8px] border-border text-sm font-medium text-muted hover:bg-section transition"
+              disabled={isMajority}
+              className={`flex-1 py-3.5 rounded-2xl border-[0.8px] text-sm font-medium transition
+                ${
+                  isMajority
+                    ? "bg-bg border-border text-muted/40 cursor-not-allowed"
+                    : "bg-bg border-border text-muted hover:bg-section"
+                }`}
             >
               한번 더 알리기
             </button>
             <button
               onClick={onNextCard}
-              className="flex-1 py-3.5 rounded-2xl bg-bg border-[0.8px] border-border text-sm font-medium text-muted hover:bg-section transition"
+              disabled={!isMajority}
+              className={`flex-1 py-3.5 rounded-2xl border-[0.8px] text-sm font-medium transition
+                ${
+                  isMajority
+                    ? "bg-bg border-border text-muted hover:bg-section"
+                    : "bg-bg border-border text-muted/40 cursor-not-allowed"
+                }`}
             >
               다음 카드 만들기
             </button>
@@ -69,8 +86,8 @@ export default function AnalysisPage({
         date="2024.06.26"
         roomTypeLabel="총대 실종형 방 발견 📍"
         temp={72}
-        participantCount={5}
-        totalCount={8}
+        participantCount={participantCount}
+        totalCount={totalCount}
         reactions={reactions}
         insightText="이 방은 만날 마음은 있지만, 아직 누가 먼저 잡을지 정해지지 않은 상태예요."
       />
