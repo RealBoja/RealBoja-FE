@@ -1,33 +1,41 @@
 // src/pages/NextCardPage.tsx
+import { useNavigate, useParams } from "react-router-dom";
 import MobileLayout from "../components/layout/MobileLayout";
 import ShareButton from "../components/common/ShareButton";
 import StageProgressBar from "../components/next-card/StageProgressBar";
 import ContextSummary from "../components/next-card/ContextSummary";
 import NextPromiseCard from "../components/next-card/NextPromiseCard";
 
-interface NextCardPageProps {
-  onBack?: () => void;
-  onShare?: () => void;
-  onAction?: () => void;
-}
+export default function NextCardPage() {
+  const navigate = useNavigate();
+  const { roomCode } = useParams<{ roomCode: string }>();
 
-export default function NextCardPage({ onShare, onAction }: NextCardPageProps) {
+  const handleAction = () => {
+    navigate(`/card/${roomCode}/second`);
+  };
+
+  const handleShare = () => {
+    const link = `${window.location.origin}/card/${roomCode}/second`;
+    navigator.clipboard.writeText(link);
+    alert("링크가 복사됐어요!");
+  };
+
   return (
     <MobileLayout
       topBar={
         <div
-          className="relative flex items-center justify-between self-stretch px-5 py-4 border-b-[0.8px] border-[#eedccb]"
+          className="relative flex items-center justify-between self-stretch px-5 py-4 border-b-[0.8px] border-border"
           style={{ background: "rgba(255, 252, 246, 0.9)" }}
         >
-          <div className="w-[60px]" />
+          <div className="w-15" />
           <span className="absolute left-1/2 -translate-x-1/2 text-base font-bold text-orange">
             진짜보자 👀
           </span>
-          <div className="w-[60px]" />
+          <div className="w-15" />
         </div>
       }
       bottomCTA={
-        <ShareButton onClick={onShare}>일정 조율 카드 공유하기</ShareButton>
+        <ShareButton onClick={handleShare}>일정 조율 카드 공유하기</ShareButton>
       }
     >
       <div className="flex flex-col gap-3">
@@ -55,7 +63,7 @@ export default function NextCardPage({ onShare, onAction }: NextCardPageProps) {
           ]}
           hintText="날짜 확정이 아니에요. 가능한 시간대만 체크해요."
           actionLabel="가능한 시간대 고르기"
-          onAction={onAction}
+          onAction={handleAction}
         />
       </div>
     </MobileLayout>
