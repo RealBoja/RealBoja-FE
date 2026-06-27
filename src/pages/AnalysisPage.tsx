@@ -43,7 +43,7 @@ export default function ResultPage({
               onClick={onMoreReaction}
               className="flex-1 py-3.5 rounded-2xl bg-bg border-[0.8px] border-border text-sm font-medium text-muted hover:bg-section transition"
             >
-              반응 더 받기
+              한번 더 알리기
             </button>
             <button
               onClick={onNextCard}

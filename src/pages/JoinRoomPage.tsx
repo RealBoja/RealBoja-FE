@@ -23,7 +23,7 @@ export default function JoinRoomPage() {
             반응 남기기
           </Button>
           <Button variant="ghost" onClick={() => {}}>
-            결과만 확인하기
+            현재 상태 확인하기
           </Button>
         </div>
       }
