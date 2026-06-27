@@ -1,6 +1,5 @@
-// App.tsx
-import LandingPage from "./pages/LandingPage";
+import JoinRoomPage from "@/pages/JoinRoomPage";
 
 export default function App() {
-  return <LandingPage />;
+  return <JoinRoomPage />;
 }
