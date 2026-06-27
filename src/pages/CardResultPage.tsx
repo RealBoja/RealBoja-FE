@@ -58,6 +58,10 @@ export default function CardResultPage() {
     alert("링크가 복사됐어요!");
   };
 
+  const handleJoinPage = () => {
+    navigate(`/card/${roomCode}/join`);
+  };
+
   return (
     <MobileLayout
       topBar={<TopBar showBack onBack={() => navigate(-1)} />}
@@ -89,7 +93,7 @@ export default function CardResultPage() {
           hint={hint}
           ctaText={ctaText}
           tone={tone}
-          onAction={() => {}}
+          onAction={handleJoinPage}
         />
       </div>
     </MobileLayout>

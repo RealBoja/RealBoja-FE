@@ -89,7 +89,7 @@ export default function PromiseCard({
       <div className="px-5 pb-5">
         <button
           onClick={onAction}
-          className="w-full rounded-2xl bg-orange py-3.5 text-base font-bold text-white shadow-[0_3px_12px_0_rgba(233,120,47,0.3)] transition hover:bg-orange-dark active:bg-orange-dark"
+          className="w-full rounded-2xl bg-orange py-3.5 text-base font-bold text-white shadow-[0_3px_12px_0_rgba(233,120,47,0.3)] transition hover:bg-orange-dark active:bg-orange-dark cursor-pointer"
         >
           {ctaText}
         </button>
