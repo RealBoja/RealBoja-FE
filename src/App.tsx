@@ -1,5 +1,5 @@
-import AnalysisPage from "@/pages/AnalysisPage";
+import JoinRoomPage from "@/pages/JoinRoomPage";
 
 export default function App() {
-  return <AnalysisPage />;
+  return <JoinRoomPage />;
 }
