@@ -93,7 +93,7 @@ export default function AnalysisPage() {
         setTotalCount(analysisData.roomSize);
 
         const maxCount = Math.max(
-          ...Object.values(analysisData.reactionSummary),
+          ...Object.values<number>(analysisData.reactionSummary),
         );
         const reactionList = (
           Object.entries(analysisData.reactionSummary) as [

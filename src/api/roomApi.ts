@@ -1,14 +1,5 @@
 // src/api/roomApi.ts
-import axios from "axios";
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-const api = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    "ngrok-skip-browser-warning": "true",
-  },
-});
+import api from "./axiosInstance";
 
 const ROOM_TYPE_MAP: Record<string, string> = {
   "고등학교 친구방": "HIGH_SCHOOL",
@@ -65,7 +56,6 @@ export const REACTION_ID_TO_TYPE: Record<string, string> = {
   eyes: "JUST_ALIVE",
 };
 
-// Frame10 시간대 한글 ↔ enum 매핑
 export const TIME_SLOT_MAP: Record<string, string> = {
   "평일 점심": "WEEKDAY_LUNCH",
   "평일 저녁": "WEEKDAY_DINNER",
@@ -175,7 +165,7 @@ export async function createRoom(params: {
     tone: TONE_MAP[params.cardTone],
   };
 
-  const { data } = await api.post<CreateRoomResponse>(`/api/rooms`, payload);
+  const { data } = await api.post<CreateRoomResponse>("/api/rooms", payload);
   return data;
 }
 
